@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* line-clamp 定义缩写 */
+.line-1 {
+  @apply line-clamp-1 break-words;
+}
+.line-2 {
+  @apply line-clamp-2 break-words;
+}
+.line-3 {
+  @apply line-clamp-3 break-words;
+}
+
+/* flex 定义缩写 */
+.f-c {
+  @apply flex items-center;
+}
+.f-s {
+  @apply flex items-start;
+}
+.f-e { 
+  @apply flex items-end;
+}
+.f-c-c {
+  @apply flex items-center justify-center;
+}
+.f-c-e {
+  @apply flex items-center justify-end;
+}
+.f-c-a {
+  @apply flex items-center justify-around;
+}
+.f-c-b {
+  @apply flex items-center justify-between;
+}
+
+/* 页面切换动画 */
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+.slide-fade-leave-active {
+  transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
+
+/* 修改默认样式 */
+input,
+button,
+select,
+textarea {
+  outline: none !important;
+}
+textarea {
+  resize: none !important;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
