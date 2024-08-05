@@ -1,1 +1,0 @@
-import '@/data/news.ts'
