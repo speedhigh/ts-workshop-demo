@@ -12,7 +12,7 @@ interface NewsInter {
   imageUrl: string
 }
 
-interface PaginateResult {
+interface PaginateResultInter {
   page: number
   size: number
   total: number
@@ -22,12 +22,12 @@ interface PaginateResult {
 interface ParamsInter {
   page: number
   size: number
-  tag: string
+  tags: string[]
 }
 
 export {
   TagsInter,
   NewsInter,
-  PaginateResult,
+  PaginateResultInter,
   ParamsInter,
 }

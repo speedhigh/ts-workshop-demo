@@ -1,5 +1,5 @@
 <template>
-  <header class="fixed inset-x-0 top-0 z-50 h-12 w-full bg-white p-1 shadow md:h-14 md:p-1.5 lg:h-16 lg:p-2">
+  <header class="h-12 w-full bg-white p-1 md:h-14 md:p-1.5 lg:h-16 lg:p-2">
     <div class="f-c-c relative size-full">
       <!-- 左侧返回 -->
       <div

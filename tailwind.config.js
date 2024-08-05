@@ -6,6 +6,7 @@ export default {
   ],
   theme: {
     extend: {
+      scrollbar: ['rounded'],
     },
     screens: {
       'sm': '640px',
@@ -24,5 +25,7 @@ export default {
       // => @media (min-width: 1536px) { ... }
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar'),
+  ],
 }

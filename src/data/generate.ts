@@ -1,13 +1,17 @@
-import type { NewsInter, PaginateResult, TagsInter } from '@/types/new'
-
-import newImage1 from '@/assets/images/new/new_01.jpg'
-import newImage2 from '@/assets/images/new/new_02.jpg'
-import newImage3 from '@/assets/images/new/new_03.jpg'
-import newImage4 from '@/assets/images/new/new_04.jpg'
-import newImage5 from '@/assets/images/new/new_05.jpg'
+import type { NewsInter, PaginateResultInter, TagsInter } from '@/types/new'
 
 // 图片地址列表
-const imageUrls: string[] = [newImage1, newImage2, newImage3, newImage4, newImage5]
+const imageUrls: string[] = [
+  'https://cdn.pixabay.com/photo/2013/09/03/19/18/tennis-178696_640.jpg',
+  'https://cdn.pixabay.com/photo/2017/06/21/08/00/pictogram-2426409_640.jpg',
+  'https://cdn.pixabay.com/photo/2013/09/03/19/18/tennis-178696_640.jpg',
+  'https://cdn.pixabay.com/photo/2017/08/27/15/38/surfing-2686450_640.jpg',
+  'https://cdn.pixabay.com/photo/2016/02/19/22/35/ferrari-1211253_640.jpg',
+  'https://cdn.pixabay.com/photo/2015/01/26/22/31/children-613196_640.jpg',
+  'https://cdn.pixabay.com/photo/2024/02/23/21/25/landscape-8592826_640.jpg',
+  'https://cdn.pixabay.com/photo/2023/07/20/11/00/cookie-8139062_640.jpg',
+  'https://cdn.pixabay.com/photo/2022/02/12/21/22/toast-7009956_640.jpg',
+]
 
 // 生成随机标题
 function generateRandomTitle(length: number): string {
@@ -58,14 +62,14 @@ function generateNews(numNews: number, tags: TagsInter[]): NewsInter[] {
   const titles = new Set<string>()
 
   while (titles.size < numNews) {
-    titles.add(generateRandomTitle(30)) // 生成 30 字符的标题
+    titles.add(generateRandomTitle(60)) // 生成 60 字符的标题
   }
 
   let id = 1
   for (const title of titles) {
     const randomTags = getRandomTags(tags, 2) // 随机选择两个标签
     const randomImage = imageUrls[Math.floor(Math.random() * imageUrls.length)] // 随机选择一个图片
-    const content = generateRandomContent(300) // 生成 300 字符的内容
+    const content = generateRandomContent(900) // 生成 900 字符的内容
     newsArray.push({
       id: id++,
       title,
@@ -95,7 +99,7 @@ function filterTags(query: string): TagsInter[] {
 }
 
 // 分页方法
-function paginateNews(page: number, size: number, tags: string[] = []): PaginateResult {
+function paginateNews(page: number, size: number, tags: string[] = []): PaginateResultInter {
   let filteredNews = newsList
   if (tags.length > 0) {
     const tagSet = new Set(tags)
