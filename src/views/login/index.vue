@@ -149,15 +149,14 @@
               パスワードを表示
             </label>
           </div>
-          <router-link to="/news-detail/1">
-            <button
-              type="submit"
-              class="mt-5 h-[36.4px] rounded-2xl bg-[#16bfb7] px-7 text-sm text-white"
-              style="box-shadow: 0 4px 8px rgba(0,0,0,.1)"
-            >
-              ログインする
-            </button>
-          </router-link>
+          <button
+            type="submit"
+            class="mt-5 h-[36.4px] rounded-2xl bg-[#16bfb7] px-7 text-sm text-white"
+            style="box-shadow: 0 4px 8px rgba(0,0,0,.1)"
+            @click="toNewsDetail"
+          >
+            ログインする
+          </button>
           <div class="mt-5">
             <li>
               <span class="text-[#16bfb7] underline">パスワードを忘れた方はこちら</span>
@@ -170,8 +169,15 @@
 </template>
 
 <script lang="ts" setup>
+import { useNewsStore } from '@/store/news'
 import btnBaseImg from '@/assets/images/login/btn_base.png'
 import jaImg from '@/assets/images/login/ja.png'
+
+const router = useRouter()
+const toNewsDetail = () => {
+  useNewsStore().initializeData()
+  router.push(`/news-detail/${1}`)
+}
 
 // 单选框
 const selectedOption = ref<number>(1)

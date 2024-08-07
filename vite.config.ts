@@ -7,6 +7,11 @@ import { getRootPath, getSrcPath } from './build/utils'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  // base: './',
+  // server: {
+  //   host: '192.168.31.87',
+  //   port: 8080,
+  // },
   plugins: [
     vue(),
     AutoImport({

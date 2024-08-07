@@ -1,27 +1,30 @@
 <template>
-  <div class="f-c w-full px-3 pb-2 shadow">
-    <!-- 输入框样式 -->
+  <div ref="containerRef" class="f-c w-full px-3 sm:px-4 md:px-6">
     <div
       ref="inputAreaRef"
-      class="f-c-b relative min-h-10 w-full rounded border border-blue-500 pl-2 pr-1"
+      class="f-c-b relative min-h-10 w-full rounded border border-blue-500 pl-2 pr-1 sm:min-h-12 xl:min-h-14"
       :class="{
         'ring-2 ring-blue-100': showDropdownMenu,
         'border-none': showRemainingTags,
       }"
     >
       <div class="f-c grow space-x-2">
-        <!-- 选中标签 -->
+        <!-- 已选择的标签展示区域 -->
         <div
-          v-if="selectedTags.length > 0"
-          class="flex max-w-96 shrink-0 items-center space-x-1.5 overflow-x-hidden"
+          v-if="tags.length > 0"
+          class="flex shrink-0 items-center space-x-1.5"
           @mousedown="preventBlur"
         >
-          <template v-for="(item, index) in selectedTags" :key="item.id">
+          <template v-for="(item, index) in tags" :key="item.id">
+            <!-- 标签 -->
             <div
-              v-if="index < 2"
-              class="f-c h-7 rounded bg-gray-100 pl-2 text-gray-800"
+              v-if="isOverflow && index < maxTagCount || !isOverflow"
+              :ref="el => setTagRef(el as HTMLDivElement, index)"
+              class="f-c h-7 rounded bg-gray-100 text-gray-800 sm:h-9 xl:h-10"
             >
-              <p class="text-xs leading-7">{{ item.label }}</p>
+              <div class="pl-2 xl:pl-3 xl:pr-1" @click="inputRef?.focus()">
+                <p class="text-xs leading-7 xl:text-sm">{{ item.label }}</p>
+              </div>
               <div
                 class="f-c-c h-full cursor-pointer px-2"
                 @click="tagDelete(index)"
@@ -32,22 +35,23 @@
               </div>
             </div>
           </template>
+          <!-- 溢出标签展示 -->
           <div
-            v-if="selectedTags.length > 2"
-            class="h-7 shrink-0 rounded bg-gray-100 px-2 text-gray-800"
+            v-if="isOverflow && tags.length > maxTagCount"
+            class="h-7 shrink-0 cursor-pointer rounded bg-gray-100 px-2 text-gray-800 sm:h-9 sm:px-3 xl:h-10 xl:px-3.5"
             @click="toggleRemainingTags"
           >
-            <p class="text-xs leading-7">+{{ selectedTags.length - 2 }}</p>
+            <p class="text-xs leading-7 sm:leading-9 xl:text-sm xl:leading-10">+{{ tags.length - maxTagCount }}</p>
           </div>
         </div>
-        <!-- 输入区 -->
+        <!-- 输入框 -->
         <div class="grow">
           <input
             ref="inputRef"
-            v-model="input.keyWord"
+            v-model="keyword"
             type="text"
             class="w-full"
-            @input="input.keyWordChange"
+            @input="input.keywordChange"
             @focus="input.focus"
             @blur="input.blur"
           />
@@ -55,39 +59,43 @@
       </div>
       <!-- 搜索按钮 -->
       <div class="f-c-c shrink-0">
-        <div class="h-8 w-16 cursor-pointer rounded bg-blue-500 text-white" @click="onSearchClick">
-          <p class="text-center text-sm leading-8">search</p>
+        <div
+          class="h-8 w-16 cursor-pointer rounded bg-blue-500 text-white sm:h-10 sm:w-24 lg:w-28 lg:hover:bg-blue-400 xl:h-12 xl:w-36"
+          @click="onSearchClick"
+        >
+          <p class="text-center text-sm leading-8 sm:text-base sm:leading-10 lg:text-lg lg:leading-10 xl:text-xl xl:leading-[3rem]">search</p>
         </div>
       </div>
-      <!-- 下拉菜单展开 -->
+      <!-- 下拉菜单 -->
       <div
         ref="externalAreaRef"
-        class="absolute inset-x-0 top-10 rounded bg-white transition-all"
+        class="absolute inset-x-0 top-10 z-50 rounded bg-white transition-all sm:top-12 xl:top-14"
         :class="showDropdownMenu ? 'scale-100 opacity-100' : 'scale-90 invisible opacity-0'"
         style="box-shadow: 0 1px 2px -2px rgba(0, 0, 0, .08), 0 3px 6px 0 rgba(0, 0, 0, .06), 0 5px 12px 4px rgba(0, 0, 0, .04)"
       >
+        <!-- 标签列表 -->
         <div
           v-if="tagsList.length"
           ref="dropdownMenuRef"
-          class="hide-scrollbar max-h-72 overflow-y-scroll p-1"
+          class="hide-scrollbar max-h-72 overflow-y-scroll p-1 sm:max-h-80 xl:max-h-96 xl:p-1.5"
         >
           <ul>
             <li
               v-for="item in tagsList"
               :key="item.id"
-              class="f-c-b h-9 w-full pl-3 pr-2 leading-9 hover:bg-gray-100"
+              class="f-c-b h-9 w-full cursor-pointer pl-3 pr-2 leading-9 hover:bg-gray-100 sm:h-10 sm:leading-10 xl:h-11 xl:leading-[2.75rem]"
               @click="tagClick(item)"
             >
               <p :class="isTagSelected(item) ? 'text-blue-600' : 'text-gray-600'">{{ item.label }}</p>
               <div v-show="isTagSelected(item)">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4 text-blue-600">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4 text-blue-600 sm:size-5">
                   <path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd" />
                 </svg>
               </div>
             </li>
           </ul>
         </div>
-        <!-- 无数据 empty -->
+        <!-- 无数据提示 -->
         <div
           v-else
           class="f-c-c h-40 flex-col space-y-2 p-1 text-gray-400"
@@ -100,25 +108,26 @@
           <p class="text-sm">无数据</p>
         </div>
       </div>
-      <!-- 剩余标签展开 -->
+      <!-- 显示剩余标签的背景遮罩 -->
       <div
         v-if="showRemainingTags"
-        class="fixed inset-0 z-20 bg-black/0 bg-opacity-50"
+        class="fixed inset-0 z-20 bg-black/0"
         @click="hideRemainingTags"
       ></div>
+      <!-- 显示剩余标签的弹窗 -->
       <div
-        class="absolute inset-x-0 top-0 z-30 min-h-16 rounded bg-white transition-all"
+        class="absolute inset-x-0 top-0 z-50 min-h-16 rounded bg-white transition-all"
         :class="showRemainingTags ? 'scale-100 opacity-100' : 'scale-90 invisible opacity-0'"
         style="box-shadow: 0 1px 2px -2px rgba(0, 0, 0, .08), 0 3px 6px 0 rgba(0, 0, 0, .06), 0 5px 12px 4px rgba(0, 0, 0, .04)"
         @click.stop
       >
         <div class="flex flex-wrap px-2 pt-2">
           <div
-            v-for="(item, index) in selectedTags"
+            v-for="(item, index) in tags"
             :key="item.id"
-            class="f-c mb-2 mr-2 h-7 rounded bg-gray-100 pl-2 text-gray-800"
+            class="f-c mb-2 mr-2 h-7 rounded bg-gray-100 pl-2 text-gray-800 sm:h-8 sm:pl-3 xl:mb-2.5 xl:mr-2.5 xl:h-9 xl:pl-4"
           >
-            <p class="text-xs leading-7">{{ item.label }}</p>
+            <p class="cursor-default text-xs leading-7 sm:leading-8 xl:text-sm xl:leading-9">{{ item.label }}</p>
             <div
               class="f-c-c h-full cursor-pointer px-2"
               @click="tagDelete(index)"
@@ -135,56 +144,109 @@
 </template>
 
 <script lang="ts" setup>
-import { onClickOutside } from '@vueuse/core'
+import { onClickOutside, useElementBounding, watchDebounced } from '@vueuse/core'
 import type { TagsInter } from '@/types/new'
 import { filterTags } from '@/data/generate'
 
+// 定义组件事件
 const emit = defineEmits(['search'])
 
-const tags = defineModel<Array<string>>({
-  type: Array as PropType<string[]>,
+// 定义组件接收的属性
+const tags = defineModel<Array<TagsInter>>({
+  type: Array as PropType<TagsInter[]>,
   required: true,
 })
 
-const selectedTags = ref<TagsInter[]>([]) // 定义模型，用于标签列表
-const showDropdownMenu = ref<boolean>(false) // 控制下拉菜单显示状态
-const showRemainingTags = ref<boolean>(false) // 控制剩余标签展开
+// 定义 DOM 元素的引用
+const inputAreaRef = ref<HTMLDivElement | null>(null)
+const inputRef = ref<HTMLInputElement | null>(null)
+const dropdownMenuRef = ref<HTMLInputElement | null>(null)
+const externalAreaRef = ref<HTMLElement | null>(null)
+const containerRef = ref<HTMLDivElement | null>(null)
+const tagRefs = ref<HTMLDivElement[]>([]) // 用于存储标签的引用
 
-function onSearchClick() {
-  tags.value = selectedTags.value.map(item => item.label)
-  emit('search')
+// 定义响应式变量
+const keyword = ref<string>('')
+const isOverflow = ref<boolean>(false)
+const maxTagCount = ref<number>(0)
+const showDropdownMenu = ref<boolean>(false)
+const showRemainingTags = ref<boolean>(false)
+
+// 根据输入关键字过滤标签列表
+const tagsList = computed(() => filterTags(keyword.value))
+
+// 获取元素的边界信息
+const containerBounding = useElementBounding(containerRef)
+const inputBounding = useElementBounding(inputRef)
+
+// 设置标签元素的引用
+const setTagRef = (el: HTMLDivElement | null, index: number) => {
+  if (el) {
+    tagRefs.value[index] = el
+  }
 }
 
-// 输入框和下拉菜单的引用
-const inputAreaRef = ref<HTMLInputElement | null>(null)
-const inputRef = ref<HTMLInputElement | null>(null)
-const externalAreaRef = ref<HTMLElement | null>(null)
-const dropdownMenuRef = ref<HTMLElement | null>(null)
+let calculating = false
 
-// 输入相关的响应式对象
+// 计算标签是否溢出
+const calculateOverflow = () => {
+  if (calculating) { return }
+  calculating = true
+
+  requestAnimationFrame(() => {
+    const inputWidth = inputBounding.width.value
+
+    // 获取最后一个标签元素
+    const lastTagElement = tagRefs.value[tagRefs.value.length - 1]
+    if (lastTagElement) {
+      const lastTagWidth = lastTagElement.offsetWidth
+      if (lastTagWidth > inputWidth - 40) {
+        isOverflow.value = true
+        maxTagCount.value = tagRefs.value.length
+      }
+      else {
+        isOverflow.value = false
+        maxTagCount.value = tagRefs.value.length
+      }
+    }
+    else {
+      isOverflow.value = false
+      maxTagCount.value = tagRefs.value.length
+    }
+    calculating = false
+  })
+}
+
+// 监视元素宽度和标签变化，计算是否溢出
+watchDebounced([containerBounding.width, inputBounding.width, tags], () => {
+  calculateOverflow()
+}, { immediate: true, debounce: 200 })
+
+// 搜索按钮点击事件
+const onSearchClick = () => {
+  emit('search', tags.value.map(item => item.label))
+}
+
+// 输入框事件
 const input = reactive({
-  keyWord: '',
   focus: () => { showDropdownMenu.value = true },
   blur: () => {
-    // 检查当前焦点是否在下拉菜单内部
     if (externalAreaRef.value && externalAreaRef.value.contains(document.activeElement)) {
       inputRef.value?.focus()
     }
     else {
-      // 否则，隐藏下拉菜单并清空输入框
       showDropdownMenu.value = false
-      input.keyWord = ''
+      keyword.value = ''
     }
   },
-  keyWordChange: () => {
-    // 滚动条置顶
+  keywordChange: () => {
     if (dropdownMenuRef.value) {
       dropdownMenuRef.value.scrollTop = 0
     }
   },
 })
 
-// 切换剩余标签显示状态
+// 切换显示剩余标签
 const toggleRemainingTags = () => {
   if (showDropdownMenu.value) {
     showDropdownMenu.value = false
@@ -194,10 +256,7 @@ const toggleRemainingTags = () => {
   showRemainingTags.value = !showRemainingTags.value
 }
 
-// 过滤后的标签列表
-const tagsList = computed(() => filterTags(input.keyWord))
-
-// 使用 onClickOutside 钩子检测点击是否发生在输入框外部 ，如果是，隐藏下拉菜单
+// 点击外部关闭下拉菜单
 onClickOutside(inputAreaRef, (event: MouseEvent) => {
   if (externalAreaRef.value && externalAreaRef.value.contains(event.target as Node)) {
     return
@@ -205,42 +264,41 @@ onClickOutside(inputAreaRef, (event: MouseEvent) => {
   showDropdownMenu.value = false
 })
 
-// 防止失焦
+// 阻止输入框失焦
 const preventBlur = (event: MouseEvent) => {
   event.preventDefault()
 }
 
-// 判断某条数据是否在已选标签列表中
-const isTagSelected = (tagItem: TagsInter) => selectedTags.value.some(tag => tag.id === tagItem.id)
+// 判断标签是否已选择
+const isTagSelected = (tagItem: TagsInter) => tags.value.some(tag => tag.id === tagItem.id)
 
-// 检查标签是否已经在已选标签列表中,根据结果添加或删除
+// 点击标签添加或删除
 const tagClick = (tagItem: TagsInter) => {
-  const index = selectedTags.value.findIndex(tag => tag.id === tagItem.id)
+  const index = tags.value.findIndex(tag => tag.id === tagItem.id)
   if (index !== -1) {
-    selectedTags.value.splice(index, 1)
+    tags.value.splice(index, 1)
   }
   else {
-    selectedTags.value.push(tagItem)
-    input.keyWord = ''
+    tags.value.push(tagItem)
+    keyword.value = ''
   }
 }
 
-// 删除一条标签
-const tagDelete = (index: number) => selectedTags.value.splice(index, 1)
+// 删除标签
+const tagDelete = (index: number) => tags.value.splice(index, 1)
 
 // 隐藏剩余标签
 const hideRemainingTags = () => showRemainingTags.value = false
 
-// 处理鼠标按下事件 ，阻止事件冒泡
+// 处理鼠标按下事件，防止失焦
 const handleMouseDown = (event: MouseEvent) => {
   if (externalAreaRef.value && externalAreaRef.value.contains(event.target as Node)) {
     event.preventDefault()
   }
 }
 
-// 组件挂载时添加全局鼠标按下事件监听器
+// 组件挂载时添加事件监听器
 onMounted(() => document.addEventListener('mousedown', handleMouseDown))
-
-// 组件卸载时移除全局鼠标按下事件监听器
+// 组件卸载时移除事件监听器
 onBeforeUnmount(() => document.removeEventListener('mousedown', handleMouseDown))
 </script>

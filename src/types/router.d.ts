@@ -1,7 +1,8 @@
 import type { RouteRecordRaw } from 'vue-router'
 
 interface Meta {
-  name: string
+  name?: string
+  keepAlive?: boolean
 }
 
 interface RouteItem {

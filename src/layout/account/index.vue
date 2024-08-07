@@ -57,7 +57,7 @@
       </div>
       <!-- content -->
       <div
-        class="px-4 pb-[100px] pt-4 md:px-[65px] lg:mx-auto lg:min-w-[1200px]"
+        class="px-4 pb-[100px] pt-4 md:px-[65px] lg:mx-auto xl:min-w-[1200px]"
         :class="{ 'hidden md:block': showMobleMenu }"
       >
         <router-view v-slot="{ Component }" class="h-full">

@@ -16,6 +16,9 @@ export const basicRoutes: RoutesType = [
         path: '/login',
         name: 'Login',
         component: () => import('@/views/login/index.vue'),
+        meta: {
+          keepAlive: false,
+        },
       },
     ],
   },
@@ -30,12 +33,18 @@ export const basicRoutes: RoutesType = [
         path: '/news-list',
         name: 'NewsList',
         component: () => import('@/views/news/index.vue'),
+        meta: {
+          keepAlive: true,
+        },
       },
       /** -- 新闻详情 -- */
       {
         path: '/news-detail/:id',
         name: 'NewsDetail',
         component: () => import('@/views/news/detail.vue'),
+        meta: {
+          keepAlive: false,
+        },
       },
     ],
   },
