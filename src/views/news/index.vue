@@ -1,54 +1,19 @@
 <template>
-  <div
-    class="relative min-h-screen bg-gray-100 pb-20 pt-24 sm:pt-28 md:pt-32 lg:bg-white lg:pb-28 lg:pt-16 xl:pb-32"
-  >
-    <!-- 顶部固定导航栏 -->
-    <header class="fixed inset-x-0 top-0 z-50 bg-white pb-2 shadow sm:pb-3 md:pb-5 lg:pb-0">
-      <base-navbar title="News">
-        <!-- 右侧登录按钮 -->
-        <template #right>
-          <router-link
-            to="/login"
-            class="f-c-c h-full space-x-0.5 rounded-lg px-2 leading-[3rem] sm:px-4 sm:hover:bg-gray-200 md:px-6"
-          >
-            <p class="text-sm text-gray-600 sm:text-base md:text-lg">Login</p>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-3">
-              <path fill-rule="evenodd" d="M2 8c0 .414.336.75.75.75h8.69l-1.22 1.22a.75.75 0 1 0 1.06 1.06l2.5-2.5a.75.75 0 0 0 0-1.06l-2.5-2.5a.75.75 0 1 0-1.06 1.06l1.22 1.22H2.75A.75.75 0 0 0 2 8Z" clip-rule="evenodd" />
-            </svg>
-          </router-link>
-        </template>
-      </base-navbar>
-      <!-- 自动完成标签组件 -->
-      <div class="lg:hidden">
-        <autocomplete-tag
-          v-model="tags"
-          @search="toSearch"
-        />
-      </div>
-    </header>
-
-    <div class="relative isolate hidden overflow-hidden bg-gray-900 py-24 sm:py-32 lg:block">
-      <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&crop=focalpoint&fp-y=.8&w=2830&h=1500&q=80&blend=111827&sat=-100&exp=15&blend-mode=multiply" alt="" class="absolute inset-0 -z-10 size-full object-cover" />
-      <div class="hidden sm:absolute sm:-top-10 sm:right-1/2 sm:-z-10 sm:mr-10 sm:block sm:transform-gpu sm:blur-3xl" aria-hidden="true">
-        <div class="aspect-[1097/845] w-[68.5625rem] bg-gradient-to-tr from-[#ff4694] to-[#776fff] opacity-20" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
-      </div>
-      <div class="absolute -top-52 left-1/2 -z-10 -translate-x-1/2 transform-gpu blur-3xl sm:top-[-28rem] sm:ml-16 sm:translate-x-0 sm:transform-gpu" aria-hidden="true">
-        <div class="aspect-[1097/845] w-[68.5625rem] bg-gradient-to-tr from-[#ff4694] to-[#776fff] opacity-20" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
-      </div>
-      <div class="mx-auto max-w-7xl px-6 lg:px-16">
-        <div class="mx-auto max-w-3xl lg:mx-0">
-          <h2 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">Latest News Updates</h2>
-          <div class="mt-6 text-lg leading-8 text-gray-300">
-            <p>Discover the latest news, insights, and stories from around the world. </p>
-            <p>Stay up-to-date with current events and explore in-depth articles that matter to you.</p>
-          </div>
-        </div>
-      </div>
+  <div class="relative min-h-screen bg-gray-100 pb-16 pt-12 sm:pt-14 md:pt-16 lg:bg-white lg:pb-28 xl:pb-32">
+    <div class="sticky top-12 z-50 bg-white pb-2 shadow sm:top-14 md:top-16 lg:hidden">
+      <autocomplete-tag
+        v-model="tags"
+        @search="toSearch"
+      />
     </div>
-
+    <!-- HeaderSections -->
+    <div class="hidden lg:block">
+      <HeaderSections />
+    </div>
     <!-- 内容 -->
     <div class="lg:mx-auto lg:max-w-[1000px] xl:max-w-7xl xl:px-16">
       <div class="mt-4 hidden py-4 lg:block">
+        {{ tags }}
         <autocomplete-tag
           v-model="tags"
           @search="toSearch"
@@ -61,7 +26,6 @@
           class="group flex h-32 w-full cursor-pointer justify-between space-x-3 rounded bg-white p-3 sm:h-44 sm:space-x-5 sm:rounded-lg sm:p-4 lg:h-52 lg:space-x-8 lg:px-1 xl:h-64 xl:space-x-12"
           @click="toNewsDetail(item)"
         >
-          <!-- 新闻内容 -->
           <div class="grow lg:py-1 xl:py-2">
             <h2 class="line-clamp-2 h-12 break-words font-bold sm:line-clamp-1 sm:h-8 sm:text-2xl lg:text-[1.75rem] xl:h-9 xl:text-3xl">{{ item.title }}</h2>
             <div class="mt-[1.38rem] hidden h-12 sm:block lg:h-14 xl:mt-8 xl:h-[84px]">
@@ -129,6 +93,7 @@
 
 <script setup lang="ts">
 import { useScroll } from '@vueuse/core'
+import HeaderSections from './components/HeaderSections.vue'
 import { paginateNews } from '@/data/generate'
 import { useNewsStore } from '@/store/news'
 import type { NewsInter, PaginateResultInter, ParamsInter, TagsInter } from '@/types/new'

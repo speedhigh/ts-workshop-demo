@@ -37,17 +37,17 @@
 }
 
 /* 页面切换动画 */
-.slide-fade-enter-active {
+/* .fade-slide-enter-active {
   transition: all 0.3s ease-out;
 }
-.slide-fade-leave-active {
+.fade-slide-leave-active {
   transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);
 }
-.slide-fade-enter-from,
-.slide-fade-leave-to {
+.fade-slide-enter-from,
+.fade-slide-leave-to {
   transform: translateX(20px);
   opacity: 0;
-}
+} */
 
 /* 修改默认样式 */
 input,

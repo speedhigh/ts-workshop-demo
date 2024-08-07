@@ -61,9 +61,7 @@
         :class="{ 'hidden md:block': showMobleMenu }"
       >
         <router-view v-slot="{ Component }" class="h-full">
-          <transition name="slide-fade" mode="out-in">
-            <component :is="Component" />
-          </transition>
+          <component :is="Component" />
         </router-view>
       </div>
     </div>

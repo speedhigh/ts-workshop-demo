@@ -1,15 +1,17 @@
 import type { RouteRecordRaw } from 'vue-router'
 
-interface Meta {
-  name?: string
+interface MetaInter {
   keepAlive?: boolean
+  title?: string
+  leftArrow?: boolean
+  border?: boolean
 }
 
 interface RouteItem {
   name?: string
   path: string
   redirect?: string
-  meta?: Meta
+  meta?: MetaInter
   children?: RoutesType
 }
 

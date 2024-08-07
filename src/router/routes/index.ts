@@ -35,6 +35,9 @@ export const basicRoutes: RoutesType = [
         component: () => import('@/views/news/index.vue'),
         meta: {
           keepAlive: true,
+          title: 'News',
+          leftArrow: false,
+          border: false,
         },
       },
       /** -- 新闻详情 -- */
@@ -44,6 +47,9 @@ export const basicRoutes: RoutesType = [
         component: () => import('@/views/news/detail.vue'),
         meta: {
           keepAlive: false,
+          title: 'News Detail',
+          leftArrow: true,
+          border: true,
         },
       },
     ],

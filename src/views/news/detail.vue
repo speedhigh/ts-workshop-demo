@@ -1,23 +1,5 @@
 <template>
-  <!-- 新闻详情页 -->
-  <div class="relative min-h-screen pb-16 pt-12 sm:pt-14 lg:mx-auto lg:max-w-[1000px] lg:pt-16 xl:max-w-7xl xl:px-[65px]">
-    <!-- 固定在顶部的导航栏 -->
-    <header class="fixed inset-x-0 top-0 z-50 bg-white sm:shadow">
-      <base-navbar left-arrow title="News Detail">
-        <!-- 右侧的登录链接 -->
-        <template #right>
-          <router-link
-            to="/login"
-            class="f-c-c h-full space-x-0.5 rounded-lg px-2 leading-[3rem] sm:px-4 sm:hover:bg-gray-200 lg:px-6"
-          >
-            <p class="text-sm text-gray-600 sm:text-base lg:text-lg">Login</p>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-3">
-              <path fill-rule="evenodd" d="M2 8c0 .414.336.75.75.75h8.69l-1.22 1.22a.75.75 0 1 0 1.06 1.06l2.5-2.5a.75.75 0 0 0 0-1.06l-2.5-2.5a.75.75 0 1 0-1.06 1.06l1.22 1.22H2.75A.75.75 0 0 0 2 8Z" clip-rule="evenodd" />
-            </svg>
-          </router-link>
-        </template>
-      </base-navbar>
-    </header>
+  <div class="relative min-h-screen pb-16 pt-12 sm:pt-14 lg:mx-auto lg:max-w-[1000px] lg:pt-16 xl:max-w-7xl xl:px-16">
     <!-- 内容区域 -->
     <div class="p-3 sm:p-12">
       <!-- 新闻标题 -->
@@ -53,7 +35,6 @@
       <div class="mt-6 sm:mt-8 lg:mt-12">
         <video-player video-src="https://www.w3schools.com/html/mov_bbb.mp4" />
       </div>
-      <!-- 再加一段文章内容（为了美观性） -->
       <div class="mt-6 sm:mt-8 lg:mt-12 lg:text-lg">
         <p class="leading-7 text-gray-800">{{ newsData.content }}</p>
       </div>
