@@ -1,6 +1,6 @@
 <template>
   <div class="relative min-h-screen bg-gray-100 pb-16 pt-12 sm:pt-14 md:pt-16 lg:bg-white lg:pb-28 xl:pb-32">
-    <div class="sticky top-12 z-50 bg-white pb-2 shadow sm:top-14 md:top-16 lg:hidden">
+    <div class="sticky top-12 z-40 bg-white pb-2 shadow sm:top-14 md:top-16 lg:hidden">
       <autocomplete-tag
         v-model="tags"
         @search="toSearch"
@@ -13,7 +13,6 @@
     <!-- 内容 -->
     <div class="lg:mx-auto lg:max-w-[1000px] xl:max-w-7xl xl:px-16">
       <div class="mt-4 hidden py-4 lg:block">
-        {{ tags }}
         <autocomplete-tag
           v-model="tags"
           @search="toSearch"
@@ -77,10 +76,7 @@
       </div>
     </div>
     <!-- 分页 -->
-    <div
-      class="fixed inset-x-0 bottom-0 pb-4 xl:block"
-      :class="isScrolling ? 'bg-white/30' : 'bg-white/90 backdrop-blur-sm'"
-    >
+    <div class="fixed inset-x-0 bottom-0 bg-white/90 pb-4 backdrop-blur-sm xl:block">
       <base-pagination
         :current-page="params.page"
         :total-pages="Math.ceil(total / params.size)"
@@ -88,19 +84,19 @@
         @update:current-page="fetchPaginatedNews"
       />
     </div>
+    <!-- 回到顶部按钮 -->
+    <BackToTop />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useScroll } from '@vueuse/core'
 import HeaderSections from './components/HeaderSections.vue'
 import { paginateNews } from '@/data/generate'
 import { useNewsStore } from '@/store/news'
-import type { NewsInter, PaginateResultInter, ParamsInter, TagsInter } from '@/types/new'
+import type { NewsInter, ParamsInter, TagsInter } from '@/types/new'
 
 // 使用 Vue Router
 const router = useRouter()
-const { isScrolling } = useScroll(window)
 
 const tags = ref<TagsInter[]>([])
 
@@ -125,10 +121,8 @@ const fetchPaginatedNews = (page: number) => {
 
 // 标签搜索
 const toSearch = (tagsData: string[]) => {
-  if (tagsData.length > 0) {
-    params.tags = tagsData
-    fetchPaginatedNews(1)
-  }
+  params.tags = tagsData
+  fetchPaginatedNews(1)
 }
 
 // 初始获取新闻数据

@@ -1,8 +1,9 @@
 <template>
   <button
     v-if="isVisible"
-    class="fixed bottom-12 right-5 size-10 rounded-full bg-black/50 text-xl text-white"
+    class="fixed bottom-16 right-5 size-10 rounded-full bg-black/50 text-xl text-white sm:size-12 sm:text-2xl lg:bottom-20"
     aria-label="Back to top"
+    data-testid="back-to-top-button"
     @click="scrollToTop"
   >
     ↑

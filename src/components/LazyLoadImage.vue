@@ -1,14 +1,17 @@
 <template>
-  <div ref="imageRef" class="relative size-full bg-gray-200">
+  <div ref="imageRef" class="relative flex size-full items-center justify-center bg-gray-200" data-testid="image-container">
     <img
       v-if="isIntersecting"
       :src="src"
       :alt="alt"
       class="size-full transition-opacity duration-500"
       :class="[objectFitClass, { 'opacity-0': !loaded, 'opacity-100': loaded }]"
+      data-testid="lazy-image"
       @load="onLoad"
     />
-    <div v-else class="size-full animate-pulse bg-gray-300"></div>
+    <div v-else class="flex size-full items-center justify-center">
+      <div class="text-gray-500" data-testid="loading-text">Loading...</div>
+    </div>
   </div>
 </template>
 
@@ -108,19 +111,8 @@ onUnmounted(() => {
     observer.value.disconnect()
   }
 })
+
+defineExpose({
+  loadImage,
+})
 </script>
-
-<style scoped>
-/* 图片过渡效果的样式 */
-.transition-opacity {
-  transition: opacity 0.5s;
-}
-
-.opacity-0 {
-  opacity: 0;
-}
-
-.opacity-100 {
-  opacity: 1;
-}
-</style>

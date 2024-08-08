@@ -10,6 +10,8 @@ interface NewsInter {
   tags: string[]
   date: string
   imageUrl: string
+  audioUrl: string
+  videoUrl: string
 }
 
 interface PaginateResultInter {

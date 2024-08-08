@@ -60,16 +60,16 @@
         </h2>
       </div>
 
-      <p class="mt-4 leading-[19px] md:text-[15px] md:leading-[21px]">
+      <p class="mb-5 mt-4 leading-[19px] md:text-[15px] md:leading-[21px]">
         生徒番号とパスワードを入力してログインしてください。
         <span class="text-[15px] text-black">生徒番号</span>や
         <span class="text-[15px] text-black">パスワード</span>
         がわからない場合は、教室にお問い合わせください。
       </p>
-      <div class="mt-5">
+      <div>
         <ul class="text-[#e53935]">
-          <li>生徒番号 を入力してください</li>
-          <li>パスワード を入力してください</li>
+          <li v-show="!loginForm.studentNo && showError">生徒番号 を入力してください</li>
+          <li v-show="!loginForm.password && showError">パスワード を入力してください</li>
         </ul>
       </div>
       <form method="POST" class="mt-2.5">
@@ -114,6 +114,7 @@
             <div class="mt-1 max-w-[540px]">
               <input
                 id="student-no"
+                v-model="loginForm.studentNo"
                 type="text"
                 name="student-no"
                 autocomplete="student-no"
@@ -131,6 +132,7 @@
             <div class="mt-1 max-w-[540px]">
               <input
                 id="password"
+                v-model="loginForm.password"
                 type="password"
                 name="password"
                 autocomplete="current-password"
@@ -150,10 +152,10 @@
             </label>
           </div>
           <button
-            type="submit"
+            type="button"
             class="mt-5 h-[36.4px] rounded-2xl bg-[#16bfb7] px-7 text-sm text-white"
             style="box-shadow: 0 4px 8px rgba(0,0,0,.1)"
-            @click="toNewsDetail"
+            @click="login"
           >
             ログインする
           </button>
@@ -174,14 +176,25 @@ import btnBaseImg from '@/assets/images/login/btn_base.png'
 import jaImg from '@/assets/images/login/ja.png'
 
 const router = useRouter()
-const toNewsDetail = () => {
-  useNewsStore().initializeData()
-  router.push(`/news-detail/${1}`)
-}
+const showError = ref<boolean>(false)
 
 // 单选框
 const selectedOption = ref<number>(1)
 const selectOption = (value: number) => {
   selectedOption.value = value
+}
+
+// 登录
+const loginForm = reactive({
+  studentNo: '',
+  password: '',
+})
+const login = () => {
+  if (!loginForm.studentNo || !loginForm.password) {
+    showError.value = true
+    return
+  }
+  showError.value = false
+  router.push(`/news-list`)
 }
 </script>

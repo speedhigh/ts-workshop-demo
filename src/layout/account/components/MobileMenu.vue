@@ -86,15 +86,16 @@ const menuActiveChange = (active: string, hasChildren: boolean) => {
     secMenuActive.value = ''
     showLastMenu.value = false
   }
-  menuActive.value = active
-  showSecMenu.value = hasChildren
+  if (hasChildren) {
+    menuActive.value = active
+    showSecMenu.value = hasChildren
+  }
 }
 // 二级菜单 点击
 const secMenuActiveChange = (active: string, hasChildren: boolean) => {
   secMenuActive.value = active === secMenuActive.value ? '' : active
   showLastMenu.value = hasChildren
 }
-
 // 初始化默认菜单
 const menuInit = () => {
   menuActive.value = secMenuActive.value = ''

@@ -4,7 +4,7 @@ import ErrorPage from '@/views/error-page/404.vue'
 export const basicRoutes: RoutesType = [
   {
     path: '/',
-    redirect: '/main',
+    redirect: '/account',
   },
   /** -- 登录页 -- */
   {

@@ -2,6 +2,7 @@
   <div
     ref="containerRef"
     class="f-c w-full px-3 sm:px-4 md:px-6"
+    data-testid="container"
   >
     <div
       ref="inputAreaRef"
@@ -10,12 +11,14 @@
         'ring-2 ring-blue-100': showDropdownMenu,
         'border-none': showRemainingTags,
       }"
+      data-testid="input-area"
     >
       <div class="f-c grow space-x-2">
         <!-- 已选择的标签展示区域 -->
         <div
           v-if="tags.length > 0"
           class="flex shrink-0 items-center space-x-1.5"
+          data-testid="selected-tags"
           @mousedown="preventBlur"
         >
           <template
@@ -27,12 +30,14 @@
               v-if="isOverflow && index < maxTagCount || !isOverflow"
               :ref="el => setTagRef(el as HTMLDivElement, index)"
               class="f-c h-7 rounded bg-gray-100 text-gray-800 sm:h-9 xl:h-10"
+              data-testid="tag-element"
             >
               <div class="pl-2 xl:pl-3 xl:pr-1" @click="fieldRef?.focus()">
                 <p class="text-xs leading-7 xl:text-sm">{{ item.label }}</p>
               </div>
               <div
                 class="f-c-c h-full cursor-pointer px-2"
+                data-testid="delete-button"
                 @click="tagDelete(index)"
               >
                 <svg
@@ -48,8 +53,9 @@
           </template>
           <!-- 溢出标签展示 -->
           <div
-            v-if="isOverflow && tags.length > maxTagCount"
+            v-show="isOverflow && tags.length > maxTagCount"
             class="h-7 shrink-0 cursor-pointer rounded bg-gray-100 px-2 text-gray-800 sm:h-9 sm:px-3 xl:h-10 xl:px-3.5"
+            data-testid="overflow-button"
             @click="toggleRemainingTags"
           >
             <p class="text-xs leading-7 sm:leading-9 xl:text-sm xl:leading-10">+{{ tags.length - maxTagCount }}</p>
@@ -62,6 +68,7 @@
             v-model="keyword"
             type="text"
             class="w-full"
+            data-testid="input-field"
             @input="field.input"
             @focus="field.focus"
             @blur="field.blur"
@@ -73,6 +80,7 @@
       <div class="f-c-c shrink-0">
         <div
           class="h-8 w-16 cursor-pointer rounded bg-blue-500 text-white sm:h-10 sm:w-24 lg:w-28 lg:hover:bg-blue-400 xl:h-12 xl:w-36"
+          data-testid="search-button"
           @click="onSearchClick"
         >
           <p class="text-center text-sm leading-8 sm:text-base sm:leading-10 lg:text-lg lg:leading-10 xl:text-xl xl:leading-[3rem]">search</p>
@@ -84,18 +92,21 @@
         class="absolute inset-x-0 top-10 z-50 rounded bg-white transition-all sm:top-12 xl:top-14"
         :class="showDropdownMenu ? 'scale-100 opacity-100' : 'scale-90 invisible opacity-0'"
         style="box-shadow: 0 1px 2px -2px rgba(0, 0, 0, .08), 0 3px 6px 0 rgba(0, 0, 0, .06), 0 5px 12px 4px rgba(0, 0, 0, .04)"
+        data-testid="dropdown-menu"
       >
         <!-- 标签列表 -->
         <div
           v-if="tagsList.length"
           ref="dropdownMenuRef"
           class="hide-scrollbar max-h-72 overflow-y-scroll p-1 sm:max-h-80 xl:max-h-96 xl:p-1.5"
+          data-testid="tags-list"
         >
           <ul>
             <li
               v-for="item in tagsList"
               :key="item.id"
               class="f-c-b h-9 w-full cursor-pointer pl-3 pr-2 leading-9 hover:bg-gray-100 sm:h-10 sm:leading-10 xl:h-11 xl:leading-[2.75rem]"
+              data-testid="tag-item"
               @click="tagClick(item)"
             >
               <p :class="isTagSelected(item) ? 'text-blue-600' : 'text-gray-600'">{{ item.label }}</p>
@@ -120,6 +131,7 @@
         <div
           v-else
           class="f-c-c h-40 flex-col space-y-2 p-1 text-gray-400"
+          data-testid="no-data"
         >
           <div class="size-12">
             <svg
@@ -133,17 +145,12 @@
           <p class="text-sm">无数据</p>
         </div>
       </div>
-      <!-- 显示剩余标签的背景遮罩 -->
-      <div
-        v-if="showRemainingTags"
-        class="fixed inset-0 z-20 bg-black/0"
-        @click="hideRemainingTags"
-      ></div>
       <!-- 显示剩余标签的弹窗 -->
       <div
         class="absolute inset-x-0 top-0 z-50 min-h-16 rounded bg-white transition-all"
         :class="showRemainingTags ? 'scale-100 opacity-100' : 'scale-90 invisible opacity-0'"
         style="box-shadow: 0 1px 2px -2px rgba(0, 0, 0, .08), 0 3px 6px 0 rgba(0, 0, 0, .06), 0 5px 12px 4px rgba(0, 0, 0, .04)"
+        data-testid="remaining-tags"
         @click.stop
       >
         <div class="flex flex-wrap px-2 pt-2">
@@ -151,10 +158,12 @@
             v-for="(item, index) in tags"
             :key="item.id"
             class="f-c mb-2 mr-2 h-7 rounded bg-gray-100 pl-2 text-gray-800 sm:h-8 sm:pl-3 xl:mb-2.5 xl:mr-2.5 xl:h-9 xl:pl-4"
+            data-testid="remaining-tag-element"
           >
             <p class="cursor-default text-xs leading-7 sm:leading-8 xl:text-sm xl:leading-9">{{ item.label }}</p>
             <div
               class="f-c-c h-full cursor-pointer px-2"
+              data-testid="remaining-delete-button"
               @click="tagDelete(index)"
             >
               <svg
@@ -170,6 +179,10 @@
         </div>
       </div>
     </div>
+    <base-overlay
+      v-model="showMask"
+      @mask-click="onMaskClick"
+    />
   </div>
 </template>
 
@@ -195,15 +208,23 @@ const externalAreaRef = ref<HTMLElement | null>(null)
 const containerRef = ref<HTMLDivElement | null>(null)
 const tagRefs = ref<HTMLDivElement[]>([]) // 用于存储标签的引用
 
-// 定义响应式变量
-const keyword = ref<string>('')
-const isOverflow = ref<boolean>(false)
-const maxTagCount = ref<number>(0)
-const showDropdownMenu = ref<boolean>(false)
-const showRemainingTags = ref<boolean>(false)
+const keyword = ref<string>('') // 输入的关键字
+const maxTagCount = ref<number>(0) // 最大可展示的标签数量
+const isOverflow = ref<boolean>(false) // 标签是否溢出
+const showDropdownMenu = ref<boolean>(false) // 是否显示下拉菜单
+const showRemainingTags = ref<boolean>(false) // 是否显示剩余标签的弹窗
 
-// 根据输入关键字过滤标签列表
-const tagsList = computed(() => filterTags(keyword.value))
+// 根据输入关键字过滤标签列表、使用 watchDebounced 监听关键字变化并进行防抖处理
+const tagsList = ref<TagsInter[]>(filterTags(''))
+watchDebounced(
+  keyword,
+  (newKeyword) => {
+    tagsList.value = filterTags(newKeyword)
+  },
+  { debounce: 300 }, // 设置防抖延迟时间为 300 毫秒
+)
+
+// const tagsList = computed(() => filterTags(keyword.value))
 
 // 获取元素的边界信息
 const containerBounding = useElementBounding(containerRef)
@@ -241,9 +262,20 @@ const calculateOverflow = () => {
 }
 
 // 监视元素宽度和标签变化，计算是否溢出
-watchDebounced([containerBounding.width, inputBounding.width, tags], () => {
+watchDebounced([containerBounding.width, inputBounding.width, tags.value], () => {
   calculateOverflow()
 }, { immediate: true, debounce: 200 })
+
+// 遮罩相关
+const showMask = ref(false)
+const onMaskClick = () => {
+  showMask.value = false
+}
+watchEffect(() => {
+  if (showDropdownMenu.value || showRemainingTags.value) {
+    showMask.value = true
+  }
+})
 
 // 搜索按钮点击事件
 const onSearchClick = () => {
@@ -258,7 +290,7 @@ const field = reactive({
       fieldRef.value?.focus()
     }
     else {
-      showDropdownMenu.value = false
+      showDropdownMenu.value = showMask.value = false
       keyword.value = ''
     }
   },
@@ -289,7 +321,7 @@ onClickOutside(inputAreaRef, (event: MouseEvent) => {
   if (externalAreaRef.value && externalAreaRef.value.contains(event.target as Node)) {
     return
   }
-  showDropdownMenu.value = false
+  showDropdownMenu.value = showRemainingTags.value = showMask.value = false
 })
 
 // 阻止输入框失焦
@@ -315,9 +347,6 @@ const tagClick = (tagItem: TagsInter) => {
 // 删除标签
 const tagDelete = (index: number) => tags.value.splice(index, 1)
 
-// 隐藏剩余标签
-const hideRemainingTags = () => showRemainingTags.value = false
-
 // 处理鼠标按下事件，防止失焦
 const handleMouseDown = (event: MouseEvent) => {
   if (externalAreaRef.value && externalAreaRef.value.contains(event.target as Node)) {
@@ -329,4 +358,13 @@ const handleMouseDown = (event: MouseEvent) => {
 onMounted(() => document.addEventListener('mousedown', handleMouseDown))
 // 组件卸载时移除事件监听器
 onBeforeUnmount(() => document.removeEventListener('mousedown', handleMouseDown))
+
+defineExpose({
+  keyword,
+  calculateOverflow,
+  showDropdownMenu,
+  maxTagCount,
+  showRemainingTags,
+  tags,
+})
 </script>

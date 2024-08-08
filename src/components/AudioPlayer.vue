@@ -3,6 +3,7 @@
     <!-- 播放/暂停按钮 -->
     <button
       class="f-c-c mr-4 w-12 shrink-0 sm:w-16 md:w-20"
+      data-testid="play-pause-button"
       @click="togglePlay"
     >
       <span v-if="isPlaying">
@@ -12,19 +13,18 @@
       </span>
       <span v-else>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
-          <path d="M6.3 2.84A1.5 1.5 0 0 0 4 4.11v11.78a1.5 1.5 0 0 0 2.3 1.27l9.344-5.891a1.5 1.5 0 0 0 0-2.538L6.3 2.841Z" />
+          <path d="M6.3 2.84A1.5 1.5 0 0 0 4 4.11v11.78a1.5 1.5 0 0 0 2.3 1.27l9.344-5.891a.75.75 0 0 0 0-1.27L6.3 2.841Z" />
         </svg>
-
       </span>
     </button>
     <!-- 音频信息和进度条 -->
     <div class="flex-1">
-      <div class="line-1 text-sm font-semibold sm:text-base">{{ props.trackTitle }}</div>
+      <div class="line-1 text-sm font-semibold sm:text-base" data-testid="track-title">{{ props.trackTitle }}</div>
       <div class="mt-2 text-xs text-gray-500">{{ formatTime(currentTime) }} / {{ formatTime(duration) }}</div>
-      <input v-model="currentTime" type="range" min="0" :max="duration" class="mt-2 w-full" @input="seek" />
+      <input v-model="currentTime" type="range" min="0" :max="duration" class="mt-2 w-full" data-testid="range-input" @input="seek" />
     </div>
     <!-- 隐藏的音频元素 -->
-    <audio ref="audio" :src="props.audioSrc" @timeupdate="updateTime" @loadedmetadata="updateDuration"></audio>
+    <audio ref="audio" :src="props.audioSrc" data-testid="audio-element" @timeupdate="updateTime" @loadedmetadata="updateDuration"></audio>
   </div>
 </template>
 

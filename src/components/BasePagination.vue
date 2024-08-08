@@ -4,6 +4,7 @@
       <button
         :disabled="props.currentPage === 1"
         class="inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium text-gray-700 hover:border-blue-400 hover:text-gray-700 disabled:cursor-not-allowed disabled:text-gray-300 lg:border-none"
+        data-testid="prev-button"
         @click="prevPage"
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-3 size-5 text-gray-400 lg:text-gray-700" aria-hidden="true">
@@ -13,7 +14,7 @@
       </button>
     </div>
     <!-- 仅移动端展示在中间的 -->
-    <div class="pt-4 text-sm text-gray-700 lg:hidden">
+    <div class="pt-4 text-sm text-gray-700 lg:hidden" data-testid="current-page">
       {{ props.currentPage }} / {{ props.totalPages }}
     </div>
     <div class="hidden lg:-mt-px lg:flex">
@@ -22,6 +23,7 @@
         v-show="startEnd.start >= 2"
         class="inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium"
         :class="[props.currentPage === 1 ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-700 hover:border-gray-300 hover:text-gray-700']"
+        data-testid="page-1-button"
         @click="changePage(1)"
       >
         1
@@ -30,6 +32,7 @@
       <button
         v-show="startEnd.start >= 3 && !arrow.showLast"
         class="inline-flex w-11 items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-700 hover:border-gray-300 hover:text-gray-700"
+        data-testid="ellipsis-last"
         @mouseenter="arrow.showLast = true"
       >
         ...
@@ -37,6 +40,7 @@
       <button
         v-show="startEnd.start >= 3 && arrow.showLast"
         class=" inline-flex w-11 items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-700 hover:border-gray-300 hover:text-gray-700"
+        data-testid="last-arrow"
         @mouseleave="arrow.showLast = false"
         @click="changeArrow('last')"
       >
@@ -48,6 +52,7 @@
         :key="index"
         class="inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium"
         :class="[page === props.currentPage ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-700 hover:border-gray-300 hover:text-gray-700']"
+        :data-testid="`page-${page}-button`"
         @click="changePage(page)"
       >
         {{ page }}
@@ -56,6 +61,7 @@
       <button
         v-show="startEnd.end <= props.totalPages - 2 && !arrow.showNext"
         class="inline-flex w-11 items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-700 hover:border-gray-300 hover:text-gray-700"
+        data-testid="ellipsis-next"
         @mouseenter="arrow.showNext = true"
       >
         ...
@@ -63,6 +69,7 @@
       <button
         v-show="startEnd.end <= props.totalPages - 2 && arrow.showNext"
         class=" inline-flex w-11 items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-700 hover:border-gray-300 hover:text-gray-700"
+        data-testid="next-arrow"
         @mouseleave="arrow.showNext = false"
         @click="changeArrow('next')"
       >
@@ -73,6 +80,7 @@
         v-show="startEnd.end < props.totalPages"
         class="inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium"
         :class="[props.currentPage === props.totalPages ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-700 hover:border-gray-300 hover:text-gray-700']"
+        :data-testid="`page-${props.totalPages}-button`"
         @click="changePage(props.totalPages)"
       >
         {{ props.totalPages }}
@@ -83,6 +91,7 @@
       <button
         :disabled="props.currentPage === props.totalPages"
         class=" inline-flex items-center border-t-2 border-transparent pl-1 pt-4 text-sm font-medium text-gray-700 hover:border-blue-400 hover:text-gray-700 disabled:cursor-not-allowed disabled:text-gray-300 lg:border-none"
+        data-testid="next-button"
         @click="nextPage"
       >
         <span class="lg:hidden">Next</span>
@@ -100,6 +109,7 @@
           v-model="goValue"
           type="number"
           class="input input-bordered focus:border-primary h-8 w-14"
+          data-testid="goto-input"
           @keyup.enter="enter"
         />
       </div>
@@ -192,16 +202,3 @@ const changeArrow = (state: string) => {
   }
 }
 </script>
-
-<style scoped>
-.pagination-button {
-  margin: 0 0.5rem;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-}
-
-.pagination-button.active {
-  font-weight: bold;
-  border-bottom: 2px solid black;
-}
-</style>

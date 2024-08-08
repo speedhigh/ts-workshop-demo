@@ -1,5 +1,5 @@
 <template>
-  <div class="h-12 w-full bg-white p-1 sm:h-14 sm:p-1.5 md:h-16 md:p-2">
+  <div class="h-12 w-full p-1 sm:h-14 sm:p-1.5 md:h-16 md:p-2">
     <div class="f-c-c relative size-full">
       <!-- 左侧返回 -->
       <div

@@ -23,7 +23,7 @@
       <div class="mt-4 overflow-hidden rounded-t shadow sm:rounded-lg">
         <img :src="newsData.imageUrl" alt="" class="w-full object-cover" />
         <audio-player
-          audio-src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+          :audio-src="newsData.audioUrl"
           :track-title="newsData.title"
         />
       </div>
@@ -33,7 +33,7 @@
       </div>
       <!-- 视频播放器 -->
       <div class="mt-6 sm:mt-8 lg:mt-12">
-        <video-player video-src="https://www.w3schools.com/html/mov_bbb.mp4" />
+        <video-player :video-src="newsData.videoUrl" />
       </div>
       <div class="mt-6 sm:mt-8 lg:mt-12 lg:text-lg">
         <p class="leading-7 text-gray-800">{{ newsData.content }}</p>

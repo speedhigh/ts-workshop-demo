@@ -1,6 +1,7 @@
+/// <reference types="vitest" />
+
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { getRootPath, getSrcPath } from './build/utils'
@@ -27,5 +28,14 @@ export default defineConfig({
       '~': getRootPath(),
       '@': getSrcPath(),
     },
+  },
+  test: {
+    environment: 'happy-dom',
+    globals: true,
+    coverage: {
+      provider: 'istanbul',
+    },
+    open: true,
+    include: ['./tests/*.{test,spec}.ts'],
   },
 })

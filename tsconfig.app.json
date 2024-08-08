@@ -9,6 +9,7 @@
       "@/*": ["./src/*"]
     },
     "resolveJsonModule": true,
+    "types": ["vitest/globals"],
     "allowJs": true,
     "strict": true,
     "strictNullChecks": true,

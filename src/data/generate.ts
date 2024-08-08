@@ -25,6 +25,22 @@ const imageUrls: string[] = [
   'https://cdn.pixabay.com/photo/2020/09/06/07/37/car-5548242_640.jpg',
 ]
 
+// 音频地址列表
+const audioUrls: string[] = [
+  'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+  'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+  'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+]
+
+// 视频地址列表
+const videoUrls: string[] = [
+  'https://cdn.pixabay.com/video/2020/05/07/38388-418005845_large.mp4',
+  'https://cdn.pixabay.com/video/2022/09/29/132932-755272963_tiny.mp4',
+  'https://cdn.pixabay.com/video/2023/10/15/185092-874643408_tiny.mp4',
+  'https://cdn.pixabay.com/video/2024/01/23/197898-905833761_large.mp4',
+  'https://cdn.pixabay.com/video/2023/07/25/173137-848555631_tiny.mp4',
+]
+
 // 生成随机标题
 function generateRandomTitle(length: number): string {
   const words = 'Lorem ipsum dolor sit amet consectetur adipiscing elit Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'.split(' ')
@@ -81,6 +97,8 @@ function generateNews(numNews: number, tags: TagsInter[]): NewsInter[] {
   for (const title of titles) {
     const randomTags = getRandomTags(tags, 2) // 随机选择两个标签
     const randomImage = imageUrls[Math.floor(Math.random() * imageUrls.length)] // 随机选择一个图片
+    const randomAudio = audioUrls[Math.floor(Math.random() * audioUrls.length)] // 随机选择一个音频
+    const randomVideo = videoUrls[Math.floor(Math.random() * videoUrls.length)] // 随机选择一个视频
     const content = generateRandomContent(900) // 生成 900 字符的内容
     newsArray.push({
       id: id++,
@@ -89,6 +107,8 @@ function generateNews(numNews: number, tags: TagsInter[]): NewsInter[] {
       tags: randomTags.map(tag => tag.label),
       date: new Date().toISOString().split('T')[0],
       imageUrl: randomImage, // 添加图片URL字段
+      audioUrl: randomAudio, // 添加音频URL字段
+      videoUrl: randomVideo, // 添加视频URL字段
     })
   }
 
@@ -134,4 +154,8 @@ function paginateNews({ page, size, tags = [] }: ParamsInter): PaginateResultInt
 export {
   filterTags,
   paginateNews,
+  generateNews,
+  generateTags,
+  tagsList,
+  newsList,
 }

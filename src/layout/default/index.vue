@@ -1,7 +1,7 @@
 <template>
   <div>
     <header
-      class="fixed inset-x-0 top-0 z-50 bg-white"
+      class="fixed inset-x-0 top-0 z-40 bg-white lg:shadow"
       :class="{ shadow: $route.meta.border }"
     >
       <LayoutNavbar />
