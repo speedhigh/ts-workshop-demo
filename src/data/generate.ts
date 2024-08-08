@@ -34,11 +34,11 @@ const audioUrls: string[] = [
 
 // 视频地址列表
 const videoUrls: string[] = [
-  'https://cdn.pixabay.com/video/2020/05/07/38388-418005845_large.mp4',
-  'https://cdn.pixabay.com/video/2022/09/29/132932-755272963_tiny.mp4',
-  'https://cdn.pixabay.com/video/2023/10/15/185092-874643408_tiny.mp4',
-  'https://cdn.pixabay.com/video/2024/01/23/197898-905833761_large.mp4',
-  'https://cdn.pixabay.com/video/2023/07/25/173137-848555631_tiny.mp4',
+  'https://cdn.pixabay.com/video/2022/12/17/143373-782178659_tiny.mp4',
+  'https://cdn.pixabay.com/video/2022/01/12/104121-665395737_tiny.mp4',
+  'https://cdn.pixabay.com/video/2016/09/13/5167-183709922_tiny.mp4',
+  'https://cdn.pixabay.com/video/2019/10/02/27466-363961185_tiny.mp4',
+  'https://cdn.pixabay.com/video/2023/05/06/161941-824623554_tiny.mp4',
 ]
 
 // 生成随机标题
@@ -68,7 +68,7 @@ function generateTags(numTags: number): TagsInter[] {
 
   // 生成标签名
   while (tagNames.size < numTags) {
-    tagNames.add(`Tag${Math.random().toString(36).substring(2, 8)}`)
+    tagNames.add(`Tag${Math.random().toString(36).substring(2, 6)}`)
   }
 
   // 生成标签

@@ -106,7 +106,3 @@ defineExpose({
   menuInit,
 })
 </script>
-
-<style>
-
-</style>

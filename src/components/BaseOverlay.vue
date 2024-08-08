@@ -3,7 +3,7 @@
     <div
       v-if="props.modelValue"
       class="fixed inset-0 z-30"
-      :style="{ backgroundColor: props.overlayColor || 'rgba(0, 0, 0, 0.1)' }"
+      :style="{ backgroundColor: props.overlayColor || 'rgba(0, 0, 0, 0.0)' }"
       data-testid="overlay"
       @click="handleClick"
     ></div>

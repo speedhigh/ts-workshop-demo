@@ -7,6 +7,8 @@ export const useNewsStore = defineStore('newsData', () => {
     date: new Date().toISOString().split('T')[0],
     id: 1,
     imageUrl: 'https://cdn.pixabay.com/photo/2024/02/23/21/25/landscape-8592826_640.jpg',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+    videoUrl: 'https://cdn.pixabay.com/video/2020/05/07/38388-418005845_large.mp4',
     tags: ['Tagqhkajh', 'Tagkt0e8s'],
     title: 'consectetur consectetur Lorem Lorem labore Sed et elit eiusm',
   }

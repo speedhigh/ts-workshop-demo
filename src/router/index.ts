@@ -17,11 +17,11 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   NProgress.start()
-  next() // 继续导航
+  next()
 })
 
 router.afterEach(() => {
-  NProgress.done() // 进度条结束
+  NProgress.done()
 })
 
 export default router

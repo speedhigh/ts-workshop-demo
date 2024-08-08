@@ -11,8 +11,17 @@
           :key="index"
           class="f-c space-x-1 lg:space-x-1.5"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4 text-blue-400">
-            <path fill-rule="evenodd" d="M4.5 2A2.5 2.5 0 0 0 2 4.5v2.879a2.5 2.5 0 0 0 .732 1.767l4.5 4.5a2.5 2.5 0 0 0 3.536 0l2.878-2.878a2.5 2.5 0 0 0 0-3.536l-4.5-4.5A2.5 2.5 0 0 0 7.38 2H4.5ZM5 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 16 16"
+            fill="currentColor"
+            class="size-4 text-blue-400"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.5 2A2.5 2.5 0 0 0 2 4.5v2.879a2.5 2.5 0 0 0 .732 1.767l4.5 4.5a2.5 2.5 0 0 0 3.536 0l2.878-2.878a2.5 2.5 0 0 0 0-3.536l-4.5-4.5A2.5 2.5 0 0 0 7.38 2H4.5ZM5 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
+              clip-rule="evenodd"
+            />
           </svg>
           <p class="text-gray-800">{{ tag }}</p>
         </div>
@@ -33,7 +42,14 @@
       </div>
       <!-- 视频播放器 -->
       <div class="mt-6 sm:mt-8 lg:mt-12">
-        <video-player :video-src="newsData.videoUrl" />
+        <div class="flex w-full items-center justify-center rounded-lg bg-white shadow-lg">
+          <video
+            :src="newsData.videoUrl"
+            controls
+            loop
+            class="w-full rounded-md shadow-lg"
+          ></video>
+        </div>
       </div>
       <div class="mt-6 sm:mt-8 lg:mt-12 lg:text-lg">
         <p class="leading-7 text-gray-800">{{ newsData.content }}</p>

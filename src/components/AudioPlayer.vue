@@ -48,7 +48,7 @@ const duration: Ref<number> = ref(0)
 const audio: Ref<HTMLAudioElement | null> = ref(null)
 
 // 播放/暂停音频的函数
-const togglePlay = (): void => {
+const togglePlay = () => {
   if (isPlaying.value) {
     audio.value?.pause()
   }
@@ -59,28 +59,28 @@ const togglePlay = (): void => {
 }
 
 // 更新当前播放时间的函数
-const updateTime = (): void => {
+const updateTime = () => {
   if (audio.value) {
     currentTime.value = audio.value.currentTime
   }
 }
 
 // 更新音频总时长的函数
-const updateDuration = (): void => {
+const updateDuration = () => {
   if (audio.value) {
     duration.value = audio.value.duration
   }
 }
 
 // 跳转到指定时间的函数
-const seek = (): void => {
+const seek = () => {
   if (audio.value) {
     audio.value.currentTime = currentTime.value
   }
 }
 
 // 监听播放和暂停事件
-onMounted((): void => {
+onMounted(() => {
   if (audio.value) {
     audio.value.addEventListener('play', () => (isPlaying.value = true))
     audio.value.addEventListener('pause', () => (isPlaying.value = false))
@@ -88,7 +88,7 @@ onMounted((): void => {
 })
 
 // 移除播放和暂停事件监听器
-onUnmounted((): void => {
+onUnmounted(() => {
   if (audio.value) {
     audio.value.removeEventListener('play', () => (isPlaying.value = true))
     audio.value.removeEventListener('pause', () => (isPlaying.value = false))

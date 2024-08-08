@@ -9,16 +9,11 @@ declare module 'vue' {
   export interface GlobalComponents {
     AudioPlayer: typeof import('./src/components/AudioPlayer.vue')['default']
     AutocompleteTag: typeof import('./src/components/AutocompleteTag.vue')['default']
-    AutoTag: typeof import('./src/components/AutoTag.vue')['default']
     BackToTop: typeof import('./src/components/BackToTop.vue')['default']
-    BaseNavbar: typeof import('./src/components/BaseNavbar.vue')['default']
     BaseOverlay: typeof import('./src/components/BaseOverlay.vue')['default']
     BasePagination: typeof import('./src/components/BasePagination.vue')['default']
-    Ee: typeof import('./src/components/ee.vue')['default']
-    EE: typeof import('./src/components/EE.vue')['default']
     LazyLoadImage: typeof import('./src/components/LazyLoadImage.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    VideoPlayer: typeof import('./src/components/VideoPlayer.vue')['default']
   }
 }

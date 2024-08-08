@@ -71,7 +71,7 @@
 <script lang="ts" setup>
 import MobileMenu from './components/MobileMenu.vue'
 import PcMenu from './components/PcMenu.vue'
-import logoImg from '@/assets/images/login/logo.png'
+import logoImg from '@/assets/images/logo.png'
 import { menuTree } from '@/data/menu'
 
 interface MobileMenuExpose {

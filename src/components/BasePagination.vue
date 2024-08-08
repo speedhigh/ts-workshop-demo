@@ -1,14 +1,25 @@
 <template>
   <nav class="flex items-center justify-between border-t border-gray-200 px-4 sm:px-12 lg:justify-center">
     <div class="-mt-px flex w-0 flex-1 lg:mx-14 lg:flex-none">
+      <!-- 上一页 -->
       <button
         :disabled="props.currentPage === 1"
-        class="inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium text-gray-700 hover:border-blue-400 hover:text-gray-700 disabled:cursor-not-allowed disabled:text-gray-300 lg:border-none"
+        class="btn-prev"
         data-testid="prev-button"
         @click="prevPage"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-3 size-5 text-gray-400 lg:text-gray-700" aria-hidden="true">
-          <path fill-rule="evenodd" d="M7.28 7.72a.75.75 0 0 1 0 1.06l-2.47 2.47H21a.75.75 0 0 1 0 1.5H4.81l2.47 2.47a.75.75 0 1 1-1.06 1.06l-3.75-3.75a.75.75 0 0 1 0-1.06l3.75-3.75a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="mr-3 size-5 text-gray-400 lg:text-gray-700"
+          aria-hidden="true"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M7.28 7.72a.75.75 0 0 1 0 1.06l-2.47 2.47H21a.75.75 0 0 1 0 1.5H4.81l2.47 2.47a.75.75 0 1 1-1.06 1.06l-3.75-3.75a.75.75 0 0 1 0-1.06l3.75-3.75a.75.75 0 0 1 1.06 0Z"
+            clip-rule="evenodd"
+          />
         </svg>
         <span class="lg:hidden">Previous</span>
       </button>
@@ -21,8 +32,8 @@
       <!-- 第一页 -->
       <button
         v-show="startEnd.start >= 2"
-        class="inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium"
-        :class="[props.currentPage === 1 ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-700 hover:border-gray-300 hover:text-gray-700']"
+        class="btn-num"
+        :class="props.currentPage === 1 ? 'btn-num-active' : 'btn-num-default'"
         data-testid="page-1-button"
         @click="changePage(1)"
       >
@@ -31,7 +42,7 @@
       <!-- 省略号//连续页码向前 -->
       <button
         v-show="startEnd.start >= 3 && !arrow.showLast"
-        class="inline-flex w-11 items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-700 hover:border-gray-300 hover:text-gray-700"
+        class="btn w-11"
         data-testid="ellipsis-last"
         @mouseenter="arrow.showLast = true"
       >
@@ -39,7 +50,7 @@
       </button>
       <button
         v-show="startEnd.start >= 3 && arrow.showLast"
-        class=" inline-flex w-11 items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-700 hover:border-gray-300 hover:text-gray-700"
+        class="btn w-11"
         data-testid="last-arrow"
         @mouseleave="arrow.showLast = false"
         @click="changeArrow('last')"
@@ -50,8 +61,8 @@
         v-for="(page, index) in startEnd.end"
         v-show="page >= startEnd.start"
         :key="index"
-        class="inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium"
-        :class="[page === props.currentPage ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-700 hover:border-gray-300 hover:text-gray-700']"
+        class="btn-num"
+        :class="page === props.currentPage ? 'btn-num-active' : 'btn-num-default'"
         :data-testid="`page-${page}-button`"
         @click="changePage(page)"
       >
@@ -60,7 +71,7 @@
       <!-- 省略号//连续页码向后 -->
       <button
         v-show="startEnd.end <= props.totalPages - 2 && !arrow.showNext"
-        class="inline-flex w-11 items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-700 hover:border-gray-300 hover:text-gray-700"
+        class="btn w-11"
         data-testid="ellipsis-next"
         @mouseenter="arrow.showNext = true"
       >
@@ -68,7 +79,7 @@
       </button>
       <button
         v-show="startEnd.end <= props.totalPages - 2 && arrow.showNext"
-        class=" inline-flex w-11 items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-700 hover:border-gray-300 hover:text-gray-700"
+        class="btn w-11"
         data-testid="next-arrow"
         @mouseleave="arrow.showNext = false"
         @click="changeArrow('next')"
@@ -78,8 +89,8 @@
       <!-- 最后一页 -->
       <button
         v-show="startEnd.end < props.totalPages"
-        class="inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium"
-        :class="[props.currentPage === props.totalPages ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-700 hover:border-gray-300 hover:text-gray-700']"
+        class="btn-num"
+        :class="props.currentPage === props.totalPages ? 'btn-num-active' : 'btn-num-default'"
         :data-testid="`page-${props.totalPages}-button`"
         @click="changePage(props.totalPages)"
       >
@@ -90,13 +101,23 @@
     <div class="-mt-px flex w-0 flex-1 justify-end lg:mx-14 lg:flex-none">
       <button
         :disabled="props.currentPage === props.totalPages"
-        class=" inline-flex items-center border-t-2 border-transparent pl-1 pt-4 text-sm font-medium text-gray-700 hover:border-blue-400 hover:text-gray-700 disabled:cursor-not-allowed disabled:text-gray-300 lg:border-none"
+        class="btn-next"
         data-testid="next-button"
         @click="nextPage"
       >
         <span class="lg:hidden">Next</span>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ml-3 size-5 text-gray-400 lg:text-gray-700" aria-hidden="true">
-          <path fill-rule="evenodd" d="M16.72 7.72a.75.75 0 0 1 1.06 0l3.75 3.75a.75.75 0 0 1 0 1.06l-3.75 3.75a.75.75 0 1 1-1.06-1.06l2.47-2.47H3a.75.75 0 0 1 0-1.5h16.19l-2.47-2.47a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="ml-3 size-5 text-gray-400 lg:text-gray-700"
+          aria-hidden="true"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M16.72 7.72a.75.75 0 0 1 1.06 0l3.75 3.75a.75.75 0 0 1 0 1.06l-3.75 3.75a.75.75 0 1 1-1.06-1.06l2.47-2.47H3a.75.75 0 0 1 0-1.5h16.19l-2.47-2.47a.75.75 0 0 1 0-1.06Z"
+            clip-rule="evenodd"
+          />
         </svg>
       </button>
     </div>
@@ -202,3 +223,24 @@ const changeArrow = (state: string) => {
   }
 }
 </script>
+
+<style scoped>
+.btn {
+  @apply inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-700 hover:border-gray-300 hover:text-gray-700;
+}
+.btn-next {
+  @apply inline-flex items-center border-t-2 border-transparent pl-1 pt-4 text-sm font-medium text-gray-700 hover:border-blue-400 hover:text-gray-700 disabled:cursor-not-allowed disabled:text-gray-300 lg:border-none;
+}
+.btn-prev {
+  @apply inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium text-gray-700 hover:border-blue-400 hover:text-gray-700 disabled:cursor-not-allowed disabled:text-gray-300 lg:border-none;
+}
+.btn-num {
+  @apply inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium;
+}
+.btn-num-default {
+  @apply border-transparent text-gray-700 hover:border-gray-300 hover:text-gray-700;
+}
+.btn-num-active {
+  @apply border-indigo-500 text-indigo-600;
+}
+</style>

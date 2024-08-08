@@ -22,13 +22,13 @@ export const basicRoutes: RoutesType = [
       },
     ],
   },
-  /** -- 后台内容 -- */
+  /** -- 新闻内容 -- */
   {
     path: '/main',
     component: () => import('@/layout/default/index.vue'),
     redirect: '/news-list',
     children: [
-      /** -- 新闻 -- */
+      /** -- 列表 -- */
       {
         path: '/news-list',
         name: 'NewsList',
@@ -40,7 +40,7 @@ export const basicRoutes: RoutesType = [
           border: false,
         },
       },
-      /** -- 新闻详情 -- */
+      /** -- 详情 -- */
       {
         path: '/news-detail/:id',
         name: 'NewsDetail',

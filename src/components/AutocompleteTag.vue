@@ -54,11 +54,11 @@
           <!-- 溢出标签展示 -->
           <div
             v-show="isOverflow && tags.length > maxTagCount"
-            class="h-7 shrink-0 cursor-pointer rounded bg-gray-100 px-2 text-gray-800 sm:h-9 sm:px-3 xl:h-10 xl:px-3.5"
+            class="f-c-c h-7 min-w-10 max-w-12 shrink-0 cursor-pointer rounded bg-gray-100 px-2 text-gray-800 sm:h-9 xl:h-10"
             data-testid="overflow-button"
             @click="toggleRemainingTags"
           >
-            <p class="text-xs leading-7 sm:leading-9 xl:text-sm xl:leading-10">+{{ tags.length - maxTagCount }}</p>
+            <p class="line-1 text-xs leading-7 sm:leading-9 xl:text-sm xl:leading-10">+{{ tags.length - maxTagCount }}</p>
           </div>
         </div>
         <!-- 输入框 -->
@@ -237,7 +237,12 @@ const setTagRef = (el: HTMLDivElement | null, index: number) => {
   }
 }
 
-// 计算标签是否溢出
+/*
+  （使用的是 flex 布局，标签宽度增加时 input 的宽度会减少）
+   只需要获取最后一个标签的宽度。
+   比较最后一个标签的宽度与输入框的剩余宽度。
+  如果最后一个标签的宽度超过输入框的剩余宽度，则标记为溢出，并显示 +n 按钮。
+*/
 const calculateOverflow = () => {
   requestAnimationFrame(() => {
     const inputWidth = inputBounding.width.value

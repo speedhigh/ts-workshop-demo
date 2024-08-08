@@ -42,7 +42,10 @@
             <br />
             以下のアイコンをクリックして友だち追加
           </p>
-          <a href="https://line.me/R/ti/p/%40onw0127a" class="inline-block h-[36px] w-[116px]">
+          <a
+            href="https://line.me/R/ti/p/%40onw0127a"
+            class="inline-block h-[36px] w-[116px]"
+          >
             <img :src="jaImg" alt="友だち追加" height="36" width="116" border="0" />
           </a>
         </div>
@@ -171,9 +174,8 @@
 </template>
 
 <script lang="ts" setup>
-import { useNewsStore } from '@/store/news'
-import btnBaseImg from '@/assets/images/login/btn_base.png'
-import jaImg from '@/assets/images/login/ja.png'
+import btnBaseImg from '@/assets/images/btn_base.png'
+import jaImg from '@/assets/images/ja.png'
 
 const router = useRouter()
 const showError = ref<boolean>(false)
