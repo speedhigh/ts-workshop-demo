@@ -42,14 +42,6 @@
 
 <br/>
 
-### 项目组件
-
-#### 项目组件位于 ***src/components*** 目录中包括：
-
-##### ***AudioPlayer*** 音频播放器、 ***AutocompleteTag*** 动态标签、 ***BasePagination*** 分页、 ***LazyLoadImage***图片懒加载、 ***BackToTop***返回顶部
-
-<br/>
-
 ### **AutocompleteTag.vue** 动态标签
 
 #### 组件概述：
