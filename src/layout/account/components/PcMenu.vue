@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
-    <ul class="flex space-x-4">
-      <li
+    <div class="flex space-x-4">
+      <div
         v-for="(item, index) in menuTreeList"
         :key="item.value"
         class="f-c relative cursor-pointer rounded px-2 hover:bg-gray-100"
@@ -27,8 +27,8 @@
             class="absolute top-8 z-10 min-w-40 pt-4 transition-all duration-300"
             :class="showLastMenu && index === menuTreeList.length - 1 ? 'right-10' : 'right-0 left-0'"
           >
-            <ul class="size-full rounded-md bg-white py-1 shadow-lg">
-              <li
+            <div class="size-full rounded-md bg-white py-1 shadow-lg">
+              <div
                 v-for="secItem in item.children"
                 :key="secItem.value"
                 class="relative h-10 hover:bg-[#16bfb7] hover:text-white"
@@ -48,25 +48,25 @@
                   v-if="secMenuActive === secItem.value && showLastMenu"
                   class="absolute left-full top-0 z-10 min-w-56 bg-white text-[#493b32]"
                 >
-                  <ul class="size-full rounded-md py-1 shadow-lg">
-                    <li
+                  <div class="size-full rounded-md py-1 shadow-lg">
+                    <div
                       v-for="lastItem in secItem.children"
                       :key="lastItem.value"
                       class="f-c-c relative h-10 hover:bg-[#16bfb7] hover:text-white"
                     >
                       <p>{{ lastItem.label }}</p>
-                    </li>
-                  </ul>
+                    </div>
+                  </div>
                 </div>
-              </li>
-            </ul>
+              </div>
+            </div>
           </div>
         </transition>
-      </li>
+      </div>
       <button class="h-8 rounded-2xl bg-[#fddc3e] px-2.5 font-bold leading-8">
         {{ props.menuTree[props.menuTree.length - 1].label }}
       </button>
-    </ul>
+    </div>
   </div>
 </template>
 

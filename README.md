@@ -54,19 +54,17 @@
 
 <br/>
 
-- #### **AudioPlayer.vue** 音频播放器
+#### **AudioPlayer.vue** 音频播放器
 
-  基于 audio 封装的一款轻量化音频播放器，拥有更时尚的外观，响应式布局适配各种设备
+#### **AutocompleteTag.vue** 动态标签
 
-- #### **AutocompleteTag.vue** 动态标签
+#### **BackToTop.vue** 返回顶部
 
-- #### **BackToTop.vue** 返回顶部
+#### **BaseOverlay.vue** 遮罩层
 
-- #### **BaseOverlay.vue** 遮罩层
+#### **BasePagination.vue** 分页
 
-- #### **BasePagination.vue** 分页
-
-- #### **LazyLoadImage.vue** 图片懒加载
+#### **LazyLoadImage.vue** 图片懒加载
 
 <br/>
 <br/>

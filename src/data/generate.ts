@@ -68,7 +68,7 @@ function generateTags(numTags: number): TagsInter[] {
 
   // 生成标签名
   while (tagNames.size < numTags) {
-    tagNames.add(`Tag${Math.random().toString(36).substring(2, 6)}`)
+    tagNames.add(`Tag${Math.random().toString(36).substring(2, 8)}`)
   }
 
   // 生成标签

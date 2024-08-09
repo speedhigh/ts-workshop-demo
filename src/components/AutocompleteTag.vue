@@ -1,6 +1,5 @@
 <template>
   <div
-    ref="containerRef"
     class="f-c w-full px-3 sm:px-4 md:px-6"
     data-testid="container"
   >
@@ -13,22 +12,23 @@
       }"
       data-testid="input-area"
     >
-      <div class="f-c grow space-x-2">
+      <div
+        ref="tagsAreaRef"
+        class="f-c grow space-x-2"
+      >
         <!-- 已选择的标签展示区域 -->
         <div
-          v-if="tags.length > 0"
+          v-if="selectedTags.length > 0"
           class="flex shrink-0 items-center space-x-1.5"
           data-testid="selected-tags"
           @mousedown="preventBlur"
         >
           <template
-            v-for="(item, index) in tags"
+            v-for="(item, index) in displayedLabels"
             :key="item.id"
           >
             <!-- 标签 -->
             <div
-              v-if="isOverflow && index < maxTagCount || !isOverflow"
-              :ref="el => setTagRef(el as HTMLDivElement, index)"
               class="f-c h-7 rounded bg-gray-100 text-gray-800 sm:h-9 xl:h-10"
               data-testid="tag-element"
             >
@@ -53,12 +53,12 @@
           </template>
           <!-- 溢出标签展示 -->
           <div
-            v-show="isOverflow && tags.length > maxTagCount"
+            v-if="hiddenCount > 0"
             class="f-c-c h-7 min-w-10 max-w-12 shrink-0 cursor-pointer rounded bg-gray-100 px-2 text-gray-800 sm:h-9 xl:h-10"
             data-testid="overflow-button"
             @click="toggleRemainingTags"
           >
-            <p class="line-1 text-xs leading-7 sm:leading-9 xl:text-sm xl:leading-10">+{{ tags.length - maxTagCount }}</p>
+            <p class="line-1 text-xs leading-7 sm:leading-9 xl:text-sm xl:leading-10">+{{ hiddenCount }}</p>
           </div>
         </div>
         <!-- 输入框 -->
@@ -77,7 +77,7 @@
         </div>
       </div>
       <!-- 搜索按钮 -->
-      <div class="f-c-c shrink-0">
+      <div class="f-c-c relative z-10 shrink-0">
         <div
           class="h-8 w-16 cursor-pointer rounded bg-blue-500 text-white sm:h-10 sm:w-24 lg:w-28 lg:hover:bg-blue-400 xl:h-12 xl:w-36"
           data-testid="search-button"
@@ -107,7 +107,7 @@
               :key="item.id"
               class="f-c-b h-9 w-full cursor-pointer pl-3 pr-2 leading-9 hover:bg-gray-100 sm:h-10 sm:leading-10 xl:h-11 xl:leading-[2.75rem]"
               data-testid="tag-item"
-              @click="tagClick(item)"
+              @mousedown.prevent="tagClick(item)"
             >
               <p :class="isTagSelected(item) ? 'text-blue-600' : 'text-gray-600'">{{ item.label }}</p>
               <div v-show="isTagSelected(item)">
@@ -145,7 +145,7 @@
           <p class="text-sm">无数据</p>
         </div>
       </div>
-      <!-- 显示剩余标签的弹窗 -->
+      <!-- 显示剩余标签(全部标签)的弹窗 -->
       <div
         class="absolute inset-x-0 top-0 z-50 min-h-16 rounded bg-white transition-all"
         :class="showRemainingTags ? 'scale-100 opacity-100' : 'scale-90 invisible opacity-0'"
@@ -155,7 +155,7 @@
       >
         <div class="flex flex-wrap px-2 pt-2">
           <div
-            v-for="(item, index) in tags"
+            v-for="(item, index) in selectedTags"
             :key="item.id"
             class="f-c mb-2 mr-2 h-7 rounded bg-gray-100 pl-2 text-gray-800 sm:h-8 sm:pl-3 xl:mb-2.5 xl:mr-2.5 xl:h-9 xl:pl-4"
             data-testid="remaining-tag-element"
@@ -181,7 +181,7 @@
     </div>
     <base-overlay
       v-model="showMask"
-      @mask-click="onMaskClick"
+      @mask-click="showMask = false"
     />
   </div>
 </template>
@@ -189,32 +189,33 @@
 <script lang="ts" setup>
 import { onClickOutside, useElementBounding, watchDebounced } from '@vueuse/core'
 import type { TagsInter } from '@/types/new'
-import { filterTags } from '@/data/generate'
 
-// 定义组件事件
+const props = defineProps<{
+  options: TagsInter[]
+}>()
+/*
+  定义事件以及组件接收的属性
+*/
 const emit = defineEmits(['search'])
+const selectedTags = ref<TagsInter[]>([]) // 选中的标签列表
 
-// 定义组件接收的属性
-const tags = defineModel<Array<TagsInter>>({
-  type: Array as PropType<TagsInter[]>,
-  required: true,
-})
+// 点击搜索按钮时触发
+const onSearchClick = () => {
+  emit('search', selectedTags.value.map(item => item.label))
+}
 
-// 定义 DOM 元素的引用
-const inputAreaRef = ref<HTMLDivElement | null>(null)
-const fieldRef = ref<HTMLInputElement | null>(null)
-const dropdownMenuRef = ref<HTMLInputElement | null>(null)
-const externalAreaRef = ref<HTMLElement | null>(null)
-const containerRef = ref<HTMLDivElement | null>(null)
-const tagRefs = ref<HTMLDivElement[]>([]) // 用于存储标签的引用
+/*
+  根据输入关键字过滤标签列表、使用 watchDebounced 监听关键字变化并进行防抖处理
+*/
+const keyword = ref<string>('')
 
-const keyword = ref<string>('') // 输入的关键字
-const maxTagCount = ref<number>(0) // 最大可展示的标签数量
-const isOverflow = ref<boolean>(false) // 标签是否溢出
-const showDropdownMenu = ref<boolean>(false) // 是否显示下拉菜单
-const showRemainingTags = ref<boolean>(false) // 是否显示剩余标签的弹窗
+const filterTags = (query: string): TagsInter[] => {
+  if (props.options.length === 0) {
+    return []
+  }
+  return props.options.filter(tag => tag.label.toLowerCase().includes(query.toLowerCase()))
+}
 
-// 根据输入关键字过滤标签列表、使用 watchDebounced 监听关键字变化并进行防抖处理
 const tagsList = ref<TagsInter[]>(filterTags(''))
 watchDebounced(
   keyword,
@@ -224,72 +225,77 @@ watchDebounced(
   { debounce: 300 }, // 设置防抖延迟时间为 300 毫秒
 )
 
-// const tagsList = computed(() => filterTags(keyword.value))
+/*
+  定义 DOM 元素的引用
+*/
+const inputAreaRef = ref<HTMLDivElement | null>(null)
+const tagsAreaRef = ref<HTMLDivElement | null>(null)
+const fieldRef = ref<HTMLInputElement | null>(null)
+const dropdownMenuRef = ref<HTMLInputElement | null>(null)
+const externalAreaRef = ref<HTMLElement | null>(null)
 
-// 获取元素的边界信息
-const containerBounding = useElementBounding(containerRef)
-const inputBounding = useElementBounding(fieldRef)
-
-// 设置标签元素的引用
-const setTagRef = (el: HTMLDivElement | null, index: number) => {
-  if (el) {
-    tagRefs.value[index] = el
+/*
+  组件核心部分：
+  通过 measureTextWidth() 模拟一个标签的宽度
+  通过 updateDisplayedLabels() 计算隐藏的标签数量和显示的标签来更新 displayedLabels
+*/
+// 隐藏的标签数量
+const hiddenCount = ref(0)
+// 用于存储当前显示的标签
+const displayedLabels = ref<TagsInter[]>([])
+// 测量标签文本宽度
+const measureTextWidth = (text: string): number => {
+  const tagHTML = document.createElement('span')
+  tagHTML.style.visibility = 'hidden'
+  tagHTML.style.whiteSpace = 'nowrap'
+  tagHTML.className = 'h-7 rounded bg-gray-100 text-gray-800 sm:h-9 xl:h-10 pl-2 pr-8 xl:pl-3 xl:pr-9'
+  tagHTML.textContent = text
+  document.body.appendChild(tagHTML)
+  const width = tagHTML.offsetWidth
+  document.body.removeChild(tagHTML)
+  return width + 6
+}
+// 计算隐藏标签数量和显示标签
+const updateDisplayedLabels = () => {
+  if (!tagsAreaRef.value || tagsAreaRef.value.clientWidth === 0) { return }
+  const containerWidth = tagsAreaRef.value.clientWidth
+  let currentWidth = 0
+  hiddenCount.value = 0
+  displayedLabels.value = []
+  for (let i = 0; i < selectedTags.value.length; i++) {
+    const label = selectedTags.value[i].label
+    const labelWidth = measureTextWidth(label)
+    if (currentWidth + labelWidth + 6 > containerWidth) {
+      hiddenCount.value = selectedTags.value.length - i
+      break
+    }
+    displayedLabels.value.push(selectedTags.value[i])
+    currentWidth += labelWidth
   }
 }
 
+// 监听组件宽度、selectedTags 变化并防抖
+const tagsBounding = useElementBounding(tagsAreaRef)
+watchDebounced([tagsBounding.width, () => selectedTags.value.length], updateDisplayedLabels, { debounce: 100 })
+
 /*
-  （使用的是 flex 布局，标签宽度增加时 input 的宽度会减少）
-   只需要获取最后一个标签的宽度。
-   比较最后一个标签的宽度与输入框的剩余宽度。
-  如果最后一个标签的宽度超过输入框的剩余宽度，则标记为溢出，并显示 +n 按钮。
+  控制下拉菜单、剩余标签弹窗的显示
+  showMask 生成透明遮罩层，防止用户误触
 */
-const calculateOverflow = () => {
-  requestAnimationFrame(() => {
-    const inputWidth = inputBounding.width.value
-    // 获取最后一个标签元素
-    const lastTagElement = tagRefs.value[tagRefs.value.length - 1]
-    if (lastTagElement) {
-      const lastTagWidth = lastTagElement.offsetWidth
-      if (lastTagWidth > inputWidth - 50) {
-        isOverflow.value = true
-        maxTagCount.value = tagRefs.value.length
-      }
-      else {
-        isOverflow.value = false
-        maxTagCount.value = tagRefs.value.length
-      }
-    }
-    else {
-      isOverflow.value = false
-      maxTagCount.value = tagRefs.value.length
-    }
-  })
-}
-
-// 监视元素宽度和标签变化，计算是否溢出
-watchDebounced([containerBounding.width, inputBounding.width, tags.value], () => {
-  calculateOverflow()
-}, { immediate: true, debounce: 200 })
-
-// 遮罩相关
 const showMask = ref(false)
-const onMaskClick = () => {
-  showMask.value = false
-}
+const showDropdownMenu = ref<boolean>(false) // 是否显示下拉菜单
+const showRemainingTags = ref<boolean>(false) // 是否显示剩余标签的弹窗
 watchEffect(() => {
   if (showDropdownMenu.value || showRemainingTags.value) {
     showMask.value = true
   }
 })
 
-// 搜索按钮点击事件
-const onSearchClick = () => {
-  emit('search', tags.value.map(item => item.label))
-}
-
 // 输入框事件
 const field = reactive({
-  focus: () => { showDropdownMenu.value = true },
+  focus: () => {
+    showDropdownMenu.value = true
+  },
   blur: () => {
     if (externalAreaRef.value && externalAreaRef.value.contains(document.activeElement)) {
       fieldRef.value?.focus()
@@ -305,8 +311,8 @@ const field = reactive({
     }
   },
   keydown: (event: KeyboardEvent) => {
-    if (event.key === 'Backspace' && keyword.value === '' && tags.value.length > 0) {
-      tags.value.pop()
+    if (event.key === 'Backspace' && keyword.value === '' && selectedTags.value.length > 0) {
+      selectedTags.value.pop()
     }
   },
 })
@@ -335,22 +341,27 @@ const preventBlur = (event: MouseEvent) => {
 }
 
 // 判断标签是否已选择
-const isTagSelected = (tagItem: TagsInter) => tags.value.some(tag => tag.id === tagItem.id)
+const isTagSelected = (tagItem: TagsInter) => selectedTags.value.some(tag => tag.id === tagItem.id)
 
 // 点击标签添加或删除
 const tagClick = (tagItem: TagsInter) => {
-  const index = tags.value.findIndex(tag => tag.id === tagItem.id)
+  const index = selectedTags.value.findIndex(tag => tag.id === tagItem.id)
   if (index !== -1) {
-    tags.value.splice(index, 1)
+    selectedTags.value.splice(index, 1)
   }
   else {
-    tags.value.push(tagItem)
+    selectedTags.value.push(tagItem)
     keyword.value = ''
   }
 }
 
 // 删除标签
-const tagDelete = (index: number) => tags.value.splice(index, 1)
+const tagDelete = (index: number) => {
+  selectedTags.value.splice(index, 1)
+  if (selectedTags.value.length === 0) {
+    showRemainingTags.value = false
+  }
+}
 
 // 处理鼠标按下事件，防止失焦
 const handleMouseDown = (event: MouseEvent) => {
@@ -360,16 +371,17 @@ const handleMouseDown = (event: MouseEvent) => {
 }
 
 // 组件挂载时添加事件监听器
-onMounted(() => document.addEventListener('mousedown', handleMouseDown))
+onMounted(() => {
+  document.addEventListener('mousedown', handleMouseDown)
+})
+
 // 组件卸载时移除事件监听器
-onBeforeUnmount(() => document.removeEventListener('mousedown', handleMouseDown))
+onBeforeUnmount(() => {
+  document.removeEventListener('mousedown', handleMouseDown)
+})
 
 defineExpose({
-  keyword,
-  calculateOverflow,
-  showDropdownMenu,
-  maxTagCount,
-  showRemainingTags,
-  tags,
+  measureTextWidth,
+  updateDisplayedLabels,
 })
 </script>

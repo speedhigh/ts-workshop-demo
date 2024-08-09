@@ -6,7 +6,7 @@
   >
     <img
       v-if="isIntersecting"
-      :src="src"
+      :src="loaded ? src : placeholderSrc"
       :alt="alt"
       class="size-full transition-opacity duration-500"
       :class="[objectFitClass, { 'opacity-0': !loaded, 'opacity-100': loaded }]"
@@ -20,36 +20,26 @@
 </template>
 
 <script setup lang="ts">
-interface Props {
-  src: string // 图片的 URL
-  alt: string // 图片的替代文本
-  objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down' // 图片的 object-fit 属性，默认为 'cover'
-}
-
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<{
+  src: string
+  alt: string
+  placeholderSrc?: string
+  objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down'
+}>(), {
+  placeholderSrc: 'https://via.placeholder.com/300?text=Loading...',
+  objectFit: 'cover',
+})
 
 const isIntersecting = ref(false) // 是否在视口内的标志
 const loaded = ref(false) // 是否加载完成的标志
-const observer = ref<IntersectionObserver | null>(null) // IntersectionObserver 实例
 const imageRef = ref<HTMLDivElement | null>(null) // 图片容器的引用
 
-/**
- * 处理 IntersectionObserver 回调
- * @param entries IntersectionObserverEntry 数组
- */
-const loadImage = (entries: IntersectionObserverEntry[]) => {
-  if (entries[0].isIntersecting) {
-    isIntersecting.value = true
-    if (observer.value) {
-      observer.value.disconnect()
-    }
-  }
-}
-// 处理图片加载完成事件
+let observer: IntersectionObserver | null = null
+
 const onLoad = () => {
   loaded.value = true
 }
-// 计算图片的 object-fit 样式类
+
 const objectFitClass = computed(() => {
   switch (props.objectFit) {
     case 'contain':
@@ -65,25 +55,26 @@ const objectFitClass = computed(() => {
       return 'object-cover'
   }
 })
-// 组件挂载时创建 IntersectionObserver 并开始观察图片容器
+
 onMounted(() => {
-  observer.value = new IntersectionObserver(loadImage, {
+  observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      isIntersecting.value = true
+      observer?.disconnect() // 只需要加载一次图片，加载后断开观察
+    }
+  }, {
     root: null,
     threshold: 0.1,
   })
 
   if (imageRef.value) {
-    observer.value.observe(imageRef.value)
-  }
-})
-// 组件卸载时断开 IntersectionObserver
-onUnmounted(() => {
-  if (observer.value) {
-    observer.value.disconnect()
+    observer.observe(imageRef.value)
   }
 })
 
-defineExpose({
-  loadImage,
+onUnmounted(() => {
+  if (observer) {
+    observer.disconnect()
+  }
 })
 </script>

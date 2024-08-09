@@ -16,7 +16,7 @@ describe('basePagination.vue', () => {
     // 查找显示当前页码的元素，并检查其文本内容是否正确
     const currentPage = wrapper.find('[data-testid="current-page"]').text()
     expect(currentPage).toBe('2 / 5')
-    wrapper.unmount() // 确保在每次测试后卸载组件
+    wrapper.unmount()
   })
 
   // 测试在第一页时，上一页按钮是否被禁用
@@ -32,7 +32,7 @@ describe('basePagination.vue', () => {
     // 查找上一页按钮，并检查其disabled属性是否存在
     const prevButton = wrapper.find('[data-testid="prev-button"]')
     expect(prevButton.attributes('disabled')).toBeDefined()
-    wrapper.unmount() // 确保在每次测试后卸载组件
+    wrapper.unmount()
   })
 
   // 测试在最后一页时，下一页按钮是否被禁用
@@ -48,7 +48,7 @@ describe('basePagination.vue', () => {
     // 查找下一页按钮，并检查其disabled属性是否存在
     const nextButton = wrapper.find('[data-testid="next-button"]')
     expect(nextButton.attributes('disabled')).toBeDefined()
-    wrapper.unmount() // 确保在每次测试后卸载组件
+    wrapper.unmount()
   })
 
   // 测试点击页码按钮时，是否正确触发事件并更新页码
@@ -68,7 +68,7 @@ describe('basePagination.vue', () => {
     // 检查事件是否正确触发，并验证事件参数
     expect(wrapper.emitted('update:currentPage')).toBeTruthy()
     expect(wrapper.emitted('update:currentPage')![0]).toEqual([3])
-    wrapper.unmount() // 确保在每次测试后卸载组件
+    wrapper.unmount()
   })
 
   // 测试点击下一页按钮时，是否正确触发事件并更新页码
@@ -88,7 +88,7 @@ describe('basePagination.vue', () => {
     // 检查事件是否正确触发，并验证事件参数
     expect(wrapper.emitted('update:currentPage')).toBeTruthy()
     expect(wrapper.emitted('update:currentPage')![0]).toEqual([2])
-    wrapper.unmount() // 确保在每次测试后卸载组件
+    wrapper.unmount()
   })
 
   // 测试点击上一页按钮时，是否正确触发事件并更新页码
@@ -108,7 +108,7 @@ describe('basePagination.vue', () => {
     // 检查事件是否正确触发，并验证事件参数
     expect(wrapper.emitted('update:currentPage')).toBeTruthy()
     expect(wrapper.emitted('update:currentPage')![0]).toEqual([1])
-    wrapper.unmount() // 确保在每次测试后卸载组件
+    wrapper.unmount()
   })
 
   // 测试在 "Go to" 输入框中按下回车键时，是否正确跳转到指定页码
@@ -129,6 +129,6 @@ describe('basePagination.vue', () => {
     // 检查事件是否正确触发，并验证事件参数
     expect(wrapper.emitted('update:currentPage')).toBeTruthy()
     expect(wrapper.emitted('update:currentPage')![0]).toEqual([4])
-    wrapper.unmount() // 确保在每次测试后卸载组件
+    wrapper.unmount()
   })
 })

@@ -1,5 +1,5 @@
 <template>
-  <div class="reactive flex min-h-screen flex-col overflow-x-hidden  text-[#493b32]">
+  <div class="reactive flex min-h-screen flex-col text-[#493b32]">
     <header
       class="f-c-b sticky inset-x-0 top-0 z-40 h-11 w-full bg-white md:h-20"
       style="box-shadow: 0 1px 2px rgba(0,0,0,.2)"

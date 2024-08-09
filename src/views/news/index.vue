@@ -1,23 +1,19 @@
 <template>
   <div class="relative min-h-screen bg-gray-100 pb-16 pt-12 sm:pt-14 md:pt-16 lg:bg-white lg:pb-28 xl:pb-32">
-    <div class="sticky top-12 z-40 bg-white pb-2 shadow sm:top-14 md:top-16 lg:hidden">
-      <autocomplete-tag
-        v-model="tags"
-        @search="toSearch"
-      />
-    </div>
     <!-- HeaderSections -->
     <div class="hidden lg:block">
       <HeaderSections />
     </div>
-    <!-- 内容 -->
-    <div class="lg:mx-auto lg:max-w-[1000px] xl:max-w-7xl xl:px-16">
-      <div class="mt-4 hidden py-4 lg:block">
+    <div class="sticky top-12 z-40 bg-white pb-2 shadow sm:top-14 md:top-16 lg:relative lg:top-0 lg:shadow-none">
+      <div class="lg:mx-auto lg:max-w-[1000px] lg:pb-4 lg:pt-8 xl:max-w-7xl xl:px-16">
         <autocomplete-tag
-          v-model="tags"
+          :options="tagsList"
           @search="toSearch"
         />
       </div>
+    </div>
+    <!-- 内容 -->
+    <div class="lg:mx-auto lg:max-w-[1000px] xl:max-w-7xl xl:px-16">
       <div class="space-y-2.5 p-3 sm:space-y-3.5 sm:px-4 sm:py-5 md:space-y-4 md:px-6 lg:space-y-7">
         <div
           v-for="item in newsList"
@@ -91,14 +87,12 @@
 
 <script setup lang="ts">
 import HeaderSections from './components/HeaderSections.vue'
-import { paginateNews } from '@/data/generate'
+import { paginateNews, tagsList } from '@/data/generate'
 import { useNewsStore } from '@/store/news'
-import type { NewsInter, ParamsInter, TagsInter } from '@/types/new'
+import type { NewsInter, ParamsInter } from '@/types/new'
 
 // 使用 Vue Router
 const router = useRouter()
-
-const tags = ref<TagsInter[]>([])
 
 // 初始化查询参数
 const params: ParamsInter = reactive({

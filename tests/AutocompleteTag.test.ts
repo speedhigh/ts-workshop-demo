@@ -1,105 +1,82 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-import AutocompleteTag from '../src/components/AutocompleteTag.vue' // 请将 'AutocompleteTag' 替换为组件的实际名称
+import AutocompleteTag from '../src/components/AutocompleteTag.vue'
 
 describe('autocompleteTag.vue', () => {
-  // 测试组件是否正确渲染
-  it('renders correctly', () => {
-    const wrapper = mount(AutocompleteTag, {
-      props: {
-        modelValue: [], // 传递空的 modelValue 作为初始值
-      },
-    })
-    expect(wrapper.exists()).toBe(true) // 断言组件存在
-    wrapper.unmount() // 确保在每次测试后卸载组件
-  })
+  // 模拟的选项数据
+  const mockOptions = [
+    { id: 1, label: 'Tag1' },
+    { id: 2, label: 'Tag2' },
+    { id: 3, label: 'Tag3' },
+  ]
 
-  // 测试输入框是否正确渲染
-  it('renders input field', () => {
+  // 测试输入框聚焦时，所有选项是否显示
+  it('displays all options when input is focused', async () => {
     const wrapper = mount(AutocompleteTag, {
-      props: {
-        modelValue: [],
-      },
+      props: { options: mockOptions },
     })
+
     const inputField = wrapper.find('[data-testid="input-field"]')
-    expect(inputField.exists()).toBe(true) // 断言输入框存在
-    wrapper.unmount() // 确保在每次测试后卸载组件
+    await inputField.trigger('focus')
+
+    const tagItems = wrapper.findAll('[data-testid="tag-item"]')
+    expect(tagItems.length).toBe(mockOptions.length)
   })
 
-  // 测试搜索按钮点击事件是否触发
-  it('emits search event when search button is clicked', async () => {
+  // 测试输入关键字时，选项是否正确过滤
+  it('filters options based on input', async () => {
     const wrapper = mount(AutocompleteTag, {
-      props: {
-        modelValue: [],
-      },
+      props: { options: mockOptions },
     })
+
+    const inputField = wrapper.find('[data-testid="input-field"]')
+    await inputField.setValue('Tag1')
+    await new Promise(resolve => setTimeout(resolve, 300)) // 输入框有防抖，延迟 300ms
+
+    const tagItems = wrapper.findAll('[data-testid="tag-item"]')
+    expect(tagItems.length).toBe(1)
+    expect(tagItems[0].text()).toBe('Tag1')
+  })
+
+  // 测试点击选项时，标签是否被正确添加
+  it('adds a tag when an option is clicked', async () => {
+    const wrapper = mount(AutocompleteTag, {
+      props: { options: mockOptions },
+    })
+
+    const tagsAreaRef = wrapper.vm.$refs.tagsAreaRef as HTMLElement
+    if (tagsAreaRef) {
+      Object.defineProperty(tagsAreaRef, 'clientWidth', { value: 500, writable: true })
+    }
+
+    const inputField = wrapper.find('[data-testid="input-field"]')
+    await inputField.trigger('focus')
+
+    const firstTag = wrapper.find('[data-testid="tag-item"]')
+    await firstTag.trigger('mousedown')
+
+    await (wrapper.vm as any).updateDisplayedLabels()
+
+    expect((wrapper.vm as any).displayedLabels.length).toBe(1)
+    expect((wrapper.vm as any).displayedLabels[0].label).toBe('Tag1')
+  })
+
+  // 测试点击搜索按钮时，是否正确触发 search 事件
+  it('emits search event with selected tags when search button is clicked', async () => {
+    const wrapper = mount(AutocompleteTag, {
+      props: { options: mockOptions },
+    })
+
+    const inputField = wrapper.find('[data-testid="input-field"]')
+    await inputField.trigger('focus')
+
+    const firstTag = wrapper.find('[data-testid="tag-item"]')
+    await firstTag.trigger('mousedown')
+
     const searchButton = wrapper.find('[data-testid="search-button"]')
-    await searchButton.trigger('click') // 模拟点击事件
-    expect(wrapper.emitted('search')).toBeTruthy() // 断言触发了搜索事件
-    wrapper.unmount() // 确保在每次测试后卸载组件
-  })
+    await searchButton.trigger('click')
 
-  // 测试标签是否正确渲染
-  it('renders tags correctly', () => {
-    const tags = [{ id: 1, label: 'Tag1' }, { id: 2, label: 'Tag2' }]
-    const wrapper = mount(AutocompleteTag, {
-      props: {
-        modelValue: tags,
-      },
-    })
-    const tagElements = wrapper.findAll('[data-testid="tag-element"]')
-    expect(tagElements.length).toBe(tags.length) // 断言标签数量正确
-    tags.forEach((tag, index) => {
-      expect(tagElements[index].text()).toContain(tag.label) // 断言标签内容正确
-    })
-    wrapper.unmount() // 确保在每次测试后卸载组件
-  })
-
-  // 测试点击标签删除按钮是否触发删除操作
-  it('removes tag when delete button is clicked', async () => {
-    const tags = [{ id: 1, label: 'Tag1' }, { id: 2, label: 'Tag2' }]
-    const wrapper = mount(AutocompleteTag, {
-      props: {
-        modelValue: tags,
-      },
-    })
-
-    const deleteButtons = wrapper.findAll('[data-testid="delete-button"]')
-    const deleteButton = deleteButtons.at(0)
-    if (deleteButton) {
-      await deleteButton.trigger('click') // 模拟点击删除按钮
-      await wrapper.vm.$nextTick() // 确保 DOM 更新
-      expect(wrapper.props().modelValue).toEqual([{ id: 2, label: 'Tag2' }]) // 断言标签更新正确
-    }
-    else {
-      throw new Error('Delete button not found')
-    }
-    wrapper.unmount() // 确保在每次测试后卸载组件
-  })
-
-  // 测试逐步添加标签并显示溢出按钮
-  it('shows +n button when tags overflow', async () => {
-    const wrapper = mount(AutocompleteTag, {
-      props: {
-        modelValue: [],
-      },
-    })
-
-    const tags = Array.from({ length: 20 }, (_, i) => ({ id: i + 1, label: `Tag${i + 1}` }))
-
-    for (const tag of tags) {
-      wrapper.setProps({ modelValue: [...wrapper.props().modelValue, tag] }) // 逐步添加标签
-      await wrapper.vm.$nextTick()
-      wrapper.vm.calculateOverflow() // 手动触发溢出计算
-      await wrapper.vm.$nextTick()
-
-      const overflowButton = wrapper.find('[data-testid="overflow-button"]')
-      if (wrapper.vm.isOverflow && wrapper.props().modelValue.length > wrapper.vm.maxTagCount) {
-        expect(overflowButton.exists()).toBe(true) // 断言溢出按钮存在
-        // expect(overflowButton.text()).toContain(`+${tags.length - wrapper.vm.maxTagCount}`) // 断言溢出按钮显示正确的数量
-        break
-      }
-    }
-    wrapper.unmount() // 确保在每次测试后卸载组件
+    expect(wrapper.emitted('search')).toBeTruthy()
+    expect(wrapper.emitted('search')![0][0]).toEqual(['Tag1'])
   })
 })
