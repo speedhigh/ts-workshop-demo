@@ -136,7 +136,7 @@
               <input
                 id="password"
                 v-model="loginForm.password"
-                type="password"
+                :type="showPassword ? 'text' : 'password'"
                 name="password"
                 autocomplete="current-password"
                 class="block w-full rounded border border-gray-300 px-2 py-2.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-[#16bfb7] sm:text-sm sm:leading-6"
@@ -145,7 +145,7 @@
           </div>
           <div class="mt-2">
             <label for="show-password" class="f-c block text-sm font-medium leading-6 text-gray-900">
-              <input id="show-password" type="checkbox" class="peer hidden" />
+              <input id="show-password" v-model="showPassword" type="checkbox" class="peer hidden" />
               <div class="f-c-c mr-2 size-4 rounded  border border-gray-300 peer-checked:border-[#16bfb7] peer-checked:bg-[#16bfb7]">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4 text-white">
                   <path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd" />
@@ -187,6 +187,7 @@ const selectOption = (value: number) => {
 }
 
 // 登录
+const showPassword = ref(false)
 const loginForm = reactive({
   studentNo: '',
   password: '',
