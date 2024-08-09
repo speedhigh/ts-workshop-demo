@@ -7,15 +7,11 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    ACopy: typeof import('./src/components/ACopy.vue')['default']
     AudioPlayer: typeof import('./src/components/AudioPlayer.vue')['default']
     AutocompleteTag: typeof import('./src/components/AutocompleteTag.vue')['default']
     BackToTop: typeof import('./src/components/BackToTop.vue')['default']
     BaseOverlay: typeof import('./src/components/BaseOverlay.vue')['default']
     BasePagination: typeof import('./src/components/BasePagination.vue')['default']
-    BCopy: typeof import('./src/components/BCopy.vue')['default']
-    CC: typeof import('./src/components/CC.vue')['default']
-    DD: typeof import('./src/components/DD.vue')['default']
     LazyLoadImage: typeof import('./src/components/LazyLoadImage.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
