@@ -54,9 +54,21 @@
 
 <br/>
 
-#### **AudioPlayer.vue** 音频播放器
+### **AudioPlayer.vue** 音频播放器
+<br/>
+
+![描述](/public/images/audio_player.jpg)
+
+<br/>
 
 #### **AutocompleteTag.vue** 动态标签
+
+<br/>
+
+![描述](/public/images/auto_tag1.jpg)
+![描述](/public/images/auto_tag2.jpg)
+
+<br/>
 
 #### **BackToTop.vue** 返回顶部
 
@@ -76,3 +88,7 @@
 <br />
 
     pnpm run test
+
+<br />
+
+![描述](/public/images/test.jpg)
