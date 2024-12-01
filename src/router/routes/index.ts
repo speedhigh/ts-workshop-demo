@@ -1,5 +1,4 @@
 import type { RoutesType } from '@/types/router'
-import ErrorPage from '@/views/error-page/404.vue'
 
 export const basicRoutes: RoutesType = [
   {
@@ -53,6 +52,6 @@ export const basicRoutes: RoutesType = [
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
-    component: () => ErrorPage,
+    component: () => '@/views/error-page/404.vue',
   },
 ]
