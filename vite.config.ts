@@ -9,7 +9,7 @@ import { getRootPath, getSrcPath } from './build/utils'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/ts-workshop-demo/',
+  base: './ts-workshop-demo/',
   // server: {
   //   host: '192.168.31.87',
   //   port: 8080,

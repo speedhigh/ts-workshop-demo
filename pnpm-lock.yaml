@@ -88,6 +88,9 @@ devDependencies:
   vite-plugin-compression:
     specifier: ^0.5.1
     version: 0.5.1(vite@5.4.11)
+  vite-plugin-deploy:
+    specifier: 0.0.0-alpha.0
+    version: 0.0.0-alpha.0
   vitest:
     specifier: ^2.1.6
     version: 2.1.6(@types/node@22.10.1)(happy-dom@14.12.3)
@@ -4738,6 +4741,10 @@ packages:
       vite: 5.4.11(@types/node@22.10.1)
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /vite-plugin-deploy@0.0.0-alpha.0:
+    resolution: {integrity: sha512-c/FrRu0LIawR0XPqexuG0eHDvpq+nSlSG6Zh42groMvAFDzDhqID0qIm5mYAHkz0zJ1vowq+ByA7Ec5IpTs0cA==}
     dev: true
 
   /vite@5.4.11(@types/node@22.10.1):
