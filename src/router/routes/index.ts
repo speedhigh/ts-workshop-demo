@@ -4,30 +4,26 @@ import ErrorPage from '@/views/error-page/404.vue'
 export const basicRoutes: RoutesType = [
   {
     path: '/',
-    redirect: '/account',
-  },
-  /** -- 登录页 -- */
-  {
-    path: '/account',
-    component: () => import('@/layout/account/index.vue'),
-    redirect: '/login',
-    children: [
-      {
-        path: '/login',
-        name: 'Login',
-        component: () => import('@/views/login/index.vue'),
-        meta: {
-          keepAlive: false,
-        },
-      },
-    ],
+    redirect: '/main',
   },
   /** -- 新闻内容 -- */
   {
     path: '/main',
-    component: () => import('@/layout/default/index.vue'),
-    redirect: '/news-list',
+    component: () => import('~/src/layout/index.vue'),
+    redirect: '/home',
     children: [
+      /** -- 首页 -- */
+      {
+        path: '/home',
+        name: 'Home',
+        component: () => import('@/views/home/index.vue'),
+        meta: {
+          keepAlive: true,
+          title: 'Home',
+          leftArrow: false,
+          border: false,
+        },
+      },
       /** -- 列表 -- */
       {
         path: '/news-list',

@@ -15,5 +15,12 @@ declare module 'vue' {
     LazyLoadImage: typeof import('./src/components/LazyLoadImage.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SectionAbout: typeof import('./src/components/main/SectionAbout.vue')['default']
+    SectionFeatures: typeof import('./src/components/main/SectionFeatures.vue')['default']
+    SectionHome: typeof import('./src/components/main/SectionHome.vue')['default']
+    SectionInquiry: typeof import('./src/components/main/SectionInquiry.vue')['default']
+    SectionInspection: typeof import('./src/components/main/SectionInspection.vue')['default']
+    SectionLivery: typeof import('./src/components/main/SectionLivery.vue')['default']
+    SectionSale: typeof import('./src/components/main/SectionSale.vue')['default']
   }
 }
